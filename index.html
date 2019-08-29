@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Asistente</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Estilos principales-->
+    <link rel="stylesheet" href="css/estilos.css">
+    <!--iconos-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+    <header id="header"></header>
+
+    <main>
+        <div class="principal">
+            <h5 class="titulo">Agregar nuevo proveedor</h5>
+            <div class="row">
+                    <div class="input-field col s6">
+                      <input id="nombre" type="text" class="validate">
+                      <label for="nombre">Nombre o razón social</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <input id="correo" type="email" class="validate">
+                      <label for="correo">Correo electrónico</label>
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="input-field col s6">
+                      <input id="pass1" type="password" class="validate">
+                      <label for="pass1">Contraseña</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <input id="pass2" type="password" class="validate">
+                      <label for="pass2">Repetir Contraseña</label>
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="input-field col s6">
+                      <input id="telefono" type="number" class="validate">
+                      <label for="telefono">Contacto</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <input id="telNeg" type="number" class="validate">
+                      <label for="telNeg">Telefono Negocio</label>
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="input-field col s6">
+                      <input id="domicilio" type="text" class="validate">
+                      <label for="domicilio">Domicilio</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <input id="cp" type="number" class="validate">
+                      <label for="cp">Codigo Postal</label>
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="input-field col s6">
+                        <input id="fechaIni" type="text" class="datepicker">                      
+                        <label for="fechaIni">Fecha inicio</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="fechaFin" type="text" class="datepicker">                      
+                        <label for="fechaFin">Fecha fin</label>
+                    </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <select id="select" onchange="select()">
+                        
+
+                    </select>
+                    <label>Categoria</label>
+                </div>
+                <div class="input-field col s6">
+                        <select id="select2" onchange="subCatSelect()">
+                           
+                        </select>
+                        <label>Subcategoria</label>
+                    </div>
+            </div>
+            <div class="row imgCont">
+              <div class="file-field input-field col s6">
+                  <div class="btn" onchange="foto(true)">
+                      <span>Escoger logo</span>
+                      <input type="file" id="logo">
+                  </div>
+                  <div class="file-path-wrapper">
+                      <input class="file-path validate" type="text">
+                  </div>
+              </div>
+              <div class="col s6">
+                  <img id="imgLogo" src="assets/imgs/no-image.png" class="responsive-img" alt="logo">
+              </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <a class="waves-effect waves-light btn registrar" onclick="registrar()">Registrar proveedor</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAyowK8q1-Ibrrm-HcPOkb19b458OV4yuA",
+            authDomain: "asistente-db380.firebaseapp.com",
+            databaseURL: "https://asistente-db380.firebaseio.com",
+            projectId: "asistente-db380",
+            storageBucket: "asistente-db380.appspot.com",
+            messagingSenderId: "544411053198",
+            appId: "1:544411053198:web:a30415520547d8c4"
+        };
+        firebase.initializeApp(firebaseConfig);
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+     <!-- Compiled and minified JavaScript -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="js/inicialiar.js"></script>
+    <script>
+        var header = document.getElementById("header");
+        var req = new XMLHttpRequest();
+        req.open("GET", "menu.html", false);
+        req.send(null);
+        header.innerHTML = req.responseText; 
+    </script>
+</body>
+</html>
