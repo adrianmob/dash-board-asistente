@@ -40,14 +40,67 @@ main {
   margin: 0 auto;
 }
 
-.imgCont{
-  display: none;
+/* Carga de bloques */
+
+.switch{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* #subCatAdd1{
+  display: flex;
+  align-items: center;
+} */
+
+.invisible{
+  display: none!important;
+  opacity: 0;
 }
 
 .visible{
   display: block;
   transition: 1s;
+  opacity: 1;
 }
+.addCat{
+  width: 100%;
+  text-align: center;
+  display: block;
+  cursor: pointer;
+}
+
+.switText{
+  padding: 10px 0 20px 0;
+}
+
+#modal1 .row{
+  border-bottom: 2px dashed #d0d0d0;
+  padding-bottom: 25px;
+}
+
+#modal1 .row.visible{
+  position: relative;
+}
+
+.cerrar{
+  position: absolute;
+  top: -40px;
+  bottom: 0;
+  right: 0;
+}
+
+.oculto{
+  opacity: 0;
+}
+
+.guardar{
+  margin: 0 auto;
+  display: block;
+  width: 50%;
+}
+
 
   @media only screen and (max-width : 992px) {
     main {

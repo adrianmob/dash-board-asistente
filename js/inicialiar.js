@@ -5,13 +5,45 @@ document.addEventListener('DOMContentLoaded', async function() {
     var instances = M.Sidenav.init(elems);
 
     var eleModal = document.querySelectorAll('.modal');
-    var instanceModal = M.Modal.init(eleModal);
+    var instanceModal = M.Modal.init(eleModal,{
+        onCloseStart: (element)=>{
+        //reseteo de los inputs Categoria Add
+          document.getElementById('categoria').value = "";
+          document.getElementById('nombre').value = "";
+          document.getElementById('InputImgCat').value = "";
+          document.getElementById('InputImgText').value = "";
+          document.getElementById('imgCat').setAttribute("src","assets/imgs/no-image.png");
+        //reseteo de los inputs SUBCATEGORIA1 SELECT
+          document.getElementById('subcat1').value = "";
+        //reseteo de los inputs SUBCATEGORIA1 ADD
+          document.getElementById('subcategoria').value = "";
+          document.getElementById('switCheck').value = "";
+          document.getElementById('selectServicio').value = "";
+        //reseteo de los inputs SUBCATEGORIA2 SELECT
+          document.getElementById('subcat2').value = "";
+          document.getElementById('switCheck').checked = false;
+          document.getElementById('selectServicio').value = "";
+        //reseteo de los inputs SUBCATEGORIA2 ADD
+          document.getElementById('subcategoria2').value = "";
+          document.getElementById('selectServicio2').value = "";
+        
+        //Ocultar informacion
+          document.getElementById('catAdd').classList.add("invisible");
+          document.getElementById('contSubCat').classList.add("invisible");
+          document.getElementById('subCatAdd1').classList.add("invisible");
+          document.getElementById('servicio').classList.add("invisible");
+          document.getElementById('contSubCat2').classList.add("invisible");
+          document.getElementById('subCatAdd2').classList.add("invisible");
+
+    }
+    });
 
     await firebase.database().ref("categorias/").once("value",(data)=>{
         var index = 0;
         for (const categoria in data.val()) {
             index++;
             for (const subcategoria in data.val()[categoria]) {
+                if(subcategoria !== 'nombre'){
                 if(data.val()[categoria][subcategoria].hasOwnProperty("grupo")){
                     var grupos = [];
                     for (const subcategoria2 in data.val()[categoria][subcategoria]["grupo"]) {
@@ -63,6 +95,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         
                     }
                 }
+            }
+            else{
+                categorias[index]['nombre'] = data.val()[categoria][subcategoria];
+
+            }
                 
             }
         }

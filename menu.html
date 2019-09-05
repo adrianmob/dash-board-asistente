@@ -1,11 +1,11 @@
-<ul id="slide-out" class="sidenav sidenav-fixed">
-        <li><a href="index.html">Agregar proveedores</a></li>
-        <li><a class="modal-trigger" href="#modal1">Carga de bloque</a></li>
-        <li><a class="modal-trigger" href="#modal2">Numero de telefonos</a></li>
-        <li><a href="comentarios.html">Comentarios</a></li>
-        <li><a href="anunciate.html">Anuncios</a></li>
-        <li><a href="anuncios.html">Crear anuncio</a></li>
-        <li><a href="graficas.html">Graficos</a></li>
+<ul id="slide-out" class="sidenav sidenav-fixed grey darken-4">
+        <li><a class="white-text" href="index.html">Agregar proveedores</a></li>
+        <li><a class="modal-trigger white-text" href="#modal1" onclick="cargaData()">Carga de bloque</a></li>
+        <li><a class="modal-trigger white-text" href="#modal2">Numero de telefonos</a></li>
+        <li><a class="white-text" href="comentarios.html">Comentarios</a></li>
+        <li><a class="white-text" href="anunciate.html">Anuncios</a></li>
+        <li><a class="white-text" href="anuncios.html">Crear anuncio</a></li>
+        <li><a class="white-text" href="graficas.html">Graficos</a></li>
 
     </ul>
     <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a> 
@@ -15,29 +15,121 @@
       <!-- Modal Structure -->
   <div id="modal1" class="modal modal-fixed-footer">
         <div class="modal-content">
+          <h3 class="center-align">Carga de bloque</h3>
+          <!-- CATEGORIA SELECT-->
           <div class="row">
-            <div class="input-field col s6">
-              <input placeholder="Placeholder" id="first_name" type="text" class="validate">
-              <label for="first_name">First Name</label>
+              <div class="input-field col s12">
+                  <select id="categoria" onchange="showSubCat(1)">
+                    <option value="" disabled selected>Escoge una categoria</option>
+                  </select>
+                  <label>Categoria</label>
+                  <a class="addCat" onclick="addCat('catAdd')">Agregar nueva categoria</a>
+              </div>
+              
+          </div>
+          <!-- CATEGORIA ADD-->
+          <div class="row invisible" id="catAdd">
+            <a class="btn-floating cerrar waves" onclick="cerrar('catAdd')"><i class="material-icons">close</i></a>
+            <div class="col s6">
+              <div class="input-field">
+                <input id="nombre" type="text" class="validate">
+                <label for="nombre">Nombre de la categoria</label>
+              </div>
+              <div class="file-field input-field">
+                  <div class="btn" onchange="foto(true)">
+                      <span>Escoge imagen de categoria</span>
+                      <input class="data" type="file" id="InputImgCat">
+                  </div>
+                  <div class="file-path-wrapper oculto">
+                      <input class="file-path validate" type="text" id="InputImgText">
+                  </div>
+              </div>
+
             </div>
             <div class="input-field col s6">
-              <input id="last_name" type="text" class="validate">
-              <label for="last_name">Last Name</label>
+                <img id="imgCat" src="assets/imgs/no-image.png" class="responsive-img" alt="imagen categoria">
+            </div>
+              <div class="col s12">
+                  <a class="waves-effect waves-light btn guardar" onclick="guardarCat(1)">Guardar</a>
+              </div>
+            </div>
+          <!-- SUBCATEGORIA1 SELECT-->
+          <div class="row invisible" id="contSubCat">
+              <div class="input-field col s12">
+                  <select id="subcat1" onchange="showSubCat(2)">
+                    <option value="" disabled selected>Escoge una subcategoria</option>
+                  </select>
+                  <label>Subcategoria 1</label>
+              </div>
+              <a class="addCat" onclick="addCat('subCatAdd1')">Agregar nueva subcategoria</a>
+              
+          </div>
+          <!-- SUBCATEGORIA1 ADD-->
+          <div class="row invisible" id="subCatAdd1">
+            <a class="btn-floating cerrar waves" onclick="cerrar('subCatAdd1')"><i class="material-icons">close</i></a>
+            <div class="input-field col s6">
+              <input id="subcategoria" type="text" class="validate">
+              <label for="subcategoria">Nombre de la categoria</label>
+            </div>
+            <div class="switch col s6">
+              <span class="switText">¿Esta subcategoria tendra subcategoias?</span>
+                <label>
+                  Si
+                  <input id="switCheck" type="checkbox" onchange="switchServicio(this)">
+                  <span class="lever"></span>
+                  No
+                </label>
+              </div>
+            <div class="input-field col s12 invisible" id="servicio">
+              <select id="selectServicio">
+                <option value="" disabled selected>Escoge un servicio</option>
+                <option value="3">Elección</option>
+                <option value="1">GPS</option>
+                <option value="2">Elección + GPS</option>
+                <option value="4">Consulta</option>
+              </select>
+              <label>Servicio</label>
+            </div>
+            <div class="col s12">
+                <a class="waves-effect waves-light btn guardar" onclick="guardarCat(2)">Guardar</a>
             </div>
           </div>
-          <div class="row">
+          <!-- SUBCATEGORIA2 SELECT-->
+          <div class="row invisible" id="contSubCat2">
+              <div class="input-field col s12">
+                  <select id="subcat2">
+                    <option value="" disabled selected>Escoge una subcategoria</option>
+                  </select>
+                  <label>Subcategoria 2</label>
+              </div>
+              <a class="addCat" onclick="addCat('subCatAdd2')">Agregar nueva subcategoria</a>
+              
+          </div>
+          <!-- SUBCATEGORIA2 ADD-->
+          <div class="row invisible" id="subCatAdd2">
+            <a class="btn-floating cerrar waves-effect waves-light" onclick="cerrar('subCatAdd2')"><i class="material-icons">close</i></a>
             <div class="input-field col s6">
-              <input placeholder="Placeholder" id="first_name" type="text" class="validate">
-              <label for="first_name">First Name</label>
+              <input id="subcategoria2" type="text" class="validate">
+              <label for="subcategoria2">Nombre de la categoria</label>
             </div>
             <div class="input-field col s6">
-              <input id="last_name" type="text" class="validate">
-              <label for="last_name">Last Name</label>
+              <select id="selectServicio2">
+                <option value="" disabled selected>Escoge un servicio</option>
+                <option value="3">Elección</option>
+                <option value="1">GPS</option>
+                <option value="2">Elección + GPS</option>
+                <option value="4">Consulta</option>
+              </select>
+              <label>Servicio</label>
+            </div>
+            <div class="col s12">
+                <a class="waves-effect waves-light btn guardar" onclick="guardarCat(3)">Guardar</a>
             </div>
           </div>
+        
         </div>
         <div class="modal-footer">
-          <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
         </div>
       </div>
 
