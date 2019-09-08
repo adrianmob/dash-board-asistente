@@ -80,13 +80,18 @@ function foto(logo){
 function registrar(){
 
     var fecha = Date.now();
+    debugger;
+    var tipoCheck = document.getElementById('switcPromo').checked;
+    var tipo = (tipoCheck) ? "promocion" : "anuncio";
+    console.log(tipo);
 
     var body = {
         telefono:  document.getElementById("telefono").value,
         fechaInicio: document.getElementById("fechaIni").value,
         fechaFin: document.getElementById("fechaFin").value,
         fechaRegistro: fecha,
-        foto: ""
+        foto: "",
+        tipo: tipo
     };
 
     body.fechaFin = convFecha(body.fechaFin);
