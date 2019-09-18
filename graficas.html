@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!-- Estilos principales-->
     <link rel="stylesheet" href="css/estilos.css">
-    <link rel="stylesheet" href="css/comentarios.css">
     <!--iconos-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -19,29 +18,34 @@
     <main>
         <div class="principal">
             <h3>Graficas</h3>
-            <div class="row" id="fila">
-                <div class="col s10">
+            <div class="row invisible" id="requisicion">
+                <h5>Requisicones Generadas</h5>
+                <div class="col s12">
                     <canvas id="myChart"></canvas>
                 </div>
             </div>
-            <div class="row" id="fila">
-                <div class="col s10">
+            <div class="row invisible" id="conceptoFila">
+                <h5>Requisicones generadas por concepto</h5>
+                <div class="col s12">
                         <canvas id="concepto"></canvas>
                 </div>
             </div>
-            <div class="row" id="fila">
-                <div class="col s10">
+            <div class="row invisible" id="cumplimientoFila">
+                <h5>Porcentaje de cumplimiento</h5>
+                <div class="col s12">
                         <canvas id="cumplimiento"></canvas>
                 </div>
             </div>
-            <div class="row" id="fila">
-                <div class="col s10">
-                        <canvas id="proveedor"></canvas>
+            <div class="row invisible" id="proveedorFila">
+                <h5>Proveedores generados por mes</h5>
+                <div class="col s12">
+                    <canvas id="proveedor"></canvas>
                 </div>
             </div>
-            <div class="row" id="fila">
-                <div class="col s10">
-                        <canvas id="anuncios"></canvas>
+            <div class="row invisible" id="anunciosFila">
+                <h5>Anuncios y promociones generadas por mes</h5>
+                <div class="col s12">
+                    <canvas id="anuncios"></canvas>
                 </div>
             </div>
         </div>

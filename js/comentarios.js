@@ -1,7 +1,12 @@
 var comentarios = [];
-document.addEventListener('DOMContentLoaded', async function() {
-    await firebase.database().ref("comentarios/").on("value",(data)=>{
+document.addEventListener('DOMContentLoaded', function() {
+     firebase.database().ref("comentarios/").on("value",(data)=>{
+         debugger;
         var fila = document.getElementById("fila");
+
+        while(fila.firstChild){
+            fila.removeChild(fila.firstChild);
+        }
         for (const key in data.val()) {
 
             var contenedor = document.createElement("DIV");
@@ -18,8 +23,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             var titulo = document.createElement("SPAN");
             titulo.classList.add("card-title");
-            var nombre = (data.val()[key]['apellidoPat']) ? data.val()[key]['apellidoPat'] : "";
-            nombre += (data.val()[key]['apellidoMat']) ? data.val()[key]['apellidoMat'] : "";
+            var nombre = (data.val()[key]['apellidoPat']) ? data.val()[key]['apellidoPat']+' ' : "";
+            nombre += (data.val()[key]['apellidoMat']) ? data.val()[key]['apellidoMat']+' ' : "";
             nombre += data.val()[key]['nombre'];
             titulo.innerHTML = nombre;
 
@@ -74,9 +79,35 @@ document.addEventListener('DOMContentLoaded', async function() {
             comentario.appendChild(comIcono);
             comentario.appendChild(comText);
 
+            var fecha = document.createElement("DIV");
+            fecha.classList.add("infoText");
+
+            var fechaIcono = document.createElement("I");
+            fechaIcono.classList.add("material-icons");
+            fechaIcono.classList.add("blue-text");
+            fechaIcono.classList.add("text-darken-2");
+            fechaIcono.classList.add("icono");
+            fechaIcono.innerHTML = "access_time";
+
+            var fechaText = document.createElement("SPAN");
+            fechaText.innerHTML = fechaChange(data.val()[key]['fecha']);
+
+            fecha.appendChild(fechaIcono);
+            fecha.appendChild(fechaText);
+
+            var boton = document.createElement("a");
+            boton.classList.add("waves-effect");
+            boton.classList.add("waves-light");
+            boton.classList.add("btn");
+            boton.classList.add("boton");
+            boton.innerHTML = "Atendido";
+            boton.onclick = completar.bind(this,[key]);
+
             info.appendChild(correo);
             info.appendChild(telefono);
             info.appendChild(comentario);
+            info.appendChild(fecha);
+            info.appendChild(boton);
 
             cardCont.appendChild(titulo)
             cardCont.appendChild(info);
@@ -94,3 +125,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 
 });
+
+function fechaChange(fecha){
+    var fechaHora = "";
+    var fechaMil = new Date(fecha);
+    return fechaHora = fechaMil.getDate() + "/" + (fechaMil.getMonth()+1) + "/" + fechaMil.getFullYear() +" " + fechaMil.getHours()+":"+fechaMil.getMinutes();
+}
+
+function completar(args,event){
+    firebase.database().ref("comentarios/"+args[0]).remove();
+
+}

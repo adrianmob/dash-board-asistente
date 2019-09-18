@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         //reseteo de los inputs SUBCATEGORIA1 ADD
           document.getElementById('subcategoria').value = "";
           document.getElementById('switCheck').value = "";
+          document.getElementById('InputImgSubCat').value = "";
+          document.getElementById('imgSubCat').setAttribute("src","assets/imgs/no-image.png");
           document.getElementById('selectServicio').value = "";
         //reseteo de los inputs SUBCATEGORIA2 SELECT
           document.getElementById('subcat2').value = "";
@@ -25,6 +27,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           document.getElementById('selectServicio').value = "";
         //reseteo de los inputs SUBCATEGORIA2 ADD
           document.getElementById('subcategoria2').value = "";
+          document.getElementById('InputImgSubCat2').value = "";
+          document.getElementById('imgSubCat2').setAttribute("src","assets/imgs/no-image.png");
           document.getElementById('selectServicio2').value = "";
         
         //Ocultar informacion
@@ -43,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         for (const categoria in data.val()) {
             index++;
             for (const subcategoria in data.val()[categoria]) {
-                if(subcategoria !== 'nombre'){
+                if(subcategoria !== 'nombre' && subcategoria !== 'url'){
                 if(data.val()[categoria][subcategoria].hasOwnProperty("grupo")){
                     var grupos = [];
                     for (const subcategoria2 in data.val()[categoria][subcategoria]["grupo"]) {
@@ -97,7 +101,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
             }
             else{
-                categorias[index]['nombre'] = data.val()[categoria][subcategoria];
+                if(subcategoria == 'nombre'){
+                    categorias[index]['nombre'] = data.val()[categoria][subcategoria];
+                }
 
             }
                 
@@ -213,6 +219,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       body.fechaInicio = convFecha(body.fechaInicio);
 
       if( tipo == 2){
+          body['urlFacebook'] = document.getElementById('Facebook').value;
           firebase.auth().createUserWithEmailAndPassword(body.correo, body.password).then((user)=>{
               firebase.database().ref("proveedores/"+user.user.uid).set(body);   
               var imagen = document.getElementById("imgLogo");
@@ -276,14 +283,15 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function subCatSelect(){
+      debugger;
     var selVal = document.getElementById("select2");
     tipo = selVal.options[selVal.selectedIndex].getAttribute('tipo');
-    var imgCont = document.getElementsByClassName("imgCont");
+    var imgCont = document.getElementsByClassName("imgLogoCont");
     if( tipo == 2){
-        imgCont[0].classList.add("visible");
+        imgCont[0].classList.remove("invisible");
     }
     else{
-        imgCont[0].classList.remove("visible");
+        imgCont[0].classList.add("invisible");
 
     }
 
@@ -304,7 +312,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   function addSelect(id,element){
     var node, nodechild;
     for (const key in categorias[id]) {
-        if(key !== "categoria"){
+        if(key !== "categoria" && key !=='nombre'){
             if( categorias[id][key].hasOwnProperty("grupo")){
                 node = document.createElement("OPTGROUP");
                 node.setAttribute("label",categorias[id][key]['nombre']);

@@ -1,3 +1,14 @@
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.sidenav');
+    var instances = M.Sidenav.init(elems);
+
+    var elemCollap = document.querySelectorAll('.collapsible');
+    var instances = M.Collapsible.init(elemCollap);
+
+    var elemTabs = document.querySelectorAll('.tabs');
+    var instance = M.Tabs.init(elemTabs);
+
+});
 
 var objetoCat;
 var cat;
@@ -12,7 +23,10 @@ async function cargaData(){
         objetoCat = data.val();
         var node;
         var element = document.getElementById("categoria"); 
-        console.log(element);       
+        console.log(element);
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }       
         for (const key in objetoCat) {
             node = document.createElement("OPTION");
             node.innerHTML = objetoCat[key]['nombre'];
@@ -26,17 +40,79 @@ async function cargaData(){
 
 }
 
-function numeros(){
-    var reparto = document.getElementById("reparto");
-    var tercero = document.getElementById("tercero");
+function guardarRepartidor(){
+    var correo = document.getElementById('correoRepartidor').value;
+    var pass = document.getElementById('passwordRepartidor').value;
 
-    var body = {
-        reparto : reparto.value,
-        tercero: tercero.value
-    };
+    console.log(correo);
+    console.log(pass);
 
-    firebase.database().ref("telefonos/").set(body);   
+    if(correo === "" || pass === ""){
 
+        Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Llene todos los campos',
+          });
+    }
+    else{
+        firebase.database().ref("proveedores/repartidor").set({
+            correo: correo,
+            password: pass,
+            requisicionesAceptadas: 0
+        });
+        
+        Swal.fire({
+            type: 'success',
+            title: 'Muy bien',
+            text: 'Repartidor agregado',
+            onClose: () => {
+                var eleModal = document.querySelectorAll('.modal');
+                var instance = M.Modal.getInstance(eleModal[1]);
+                console.log(instance);
+                instance.close();
+              }
+        });  
+
+    }
+
+}
+
+function guardarProveedor(){
+    var correo = document.getElementById('correoProveedorTer').value;
+    var pass = document.getElementById('passwordProveedorTer').value;
+
+    console.log(correo);
+    console.log(pass);
+
+    if(correo === "" || pass === ""){
+
+        Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Llene todos los campos',
+          });
+    }
+    else{
+        firebase.database().ref("proveedores/tercero").set({
+            correo: correo,
+            password: pass,
+            requisicionesAceptadas: 0
+        });
+        
+        Swal.fire({
+            type: 'success',
+            title: 'Muy bien',
+            text: 'Proveedor tercero agregado',
+            onClose: () => {
+                var eleModal = document.querySelectorAll('.modal');
+                var instance = M.Modal.getInstance(eleModal[1]);
+                console.log(instance);
+                instance.close();
+              }
+        });  
+
+    }
 
 }
 
@@ -58,9 +134,8 @@ function showSubCat(id){
     
         var node;
     
-    
         for (const key in objetoCat[valorCat]) {
-            if(key !== 'nombre'){
+            if(key !== 'nombre' && key !== 'url'){
                 node = document.createElement("OPTION");
                 node.innerHTML = objetoCat[valorCat][key]['nombre'];
                 node.setAttribute("value",key);
@@ -89,7 +164,7 @@ function showSubCat(id){
     
         for (const key in objetoCat[valorCat][valorSubCat]) {
             
-            if(key !== 'nombre'){
+            if(key !== 'nombre' && key !== 'url'){
                 if(key === "grupo"){
                     var objSubcat = objetoCat[valorCat][valorSubCat][key];
                     for (const key in objSubcat) {
@@ -147,6 +222,7 @@ function guardarCat(id){
             };
 
             if(validarCampos(categoria)){
+                
                 cat = {
                     nombre: categoria.nombre,
                     nombreCorto: nameShort(categoria.nombre),
@@ -157,22 +233,6 @@ function guardarCat(id){
                     classes: 'rounded'
                 });
                 addCat('subCatAdd1');
-                firebase.database().ref("categorias/"+nombre).set({
-                    nombre: categoria.nombre,
-                    url: categoria.imagen
-                }); 
-                Swal.fire({
-                    type: 'success',
-                    title: 'Muy bien',
-                    text: 'Categoria agregada',
-                    onClose: () => {
-                        var eleModal = document.querySelectorAll('.modal');
-                        var instance = M.Modal.getInstance(eleModal[0]);
-                        console.log(instance);
-                        instance.close();
-
-                      }
-                });   
             }
             else{
                 Swal.fire(
@@ -191,6 +251,11 @@ function guardarCat(id){
 
             var swich = document.getElementById('switCheck').checked;
 
+            var url = document.getElementById('imgSubCat').getAttribute("src");
+            if(url == "assets/imgs/no-image.png") url = "";
+
+            subcategoria['url'] = url;
+
             if(swich){
                 subcategoria['tipo'] = document.getElementById('selectServicio').value;
                 if(validarCampos(subcategoria)){
@@ -201,10 +266,11 @@ function guardarCat(id){
                         };
                         subCatObj[nameShort(subcategoria.nombre)] = {
                             nombre: subcategoria.nombre,
-                            tipo: subcategoria.tipo
+                            tipo: subcategoria.tipo,
+                            url: subcategoria.url
                         };
 
-                        firebase.database().ref("categorias/"+cat.nombre).set(subCatObj); 
+                        firebase.database().ref("categorias/"+cat.nombreCorto).set(subCatObj); 
                         Swal.fire({
                             type: 'success',
                             title: 'Muy bien',
@@ -221,9 +287,10 @@ function guardarCat(id){
                     else{
                         var nomCategoria = document.getElementById("categoria").value;
                         var categoria = {};
+                        
                         categoria[nameShort(subcategoria.nombre)] = subcategoria;
 
-                         firebase.database().ref("categorias/"+nomCategoria).set(categoria); 
+                         firebase.database().ref("categorias/"+nomCategoria).update(categoria); 
                          Swal.fire({
                             type: 'success',
                             title: 'Muy bien',
@@ -255,6 +322,7 @@ function guardarCat(id){
                     subCat = {
                         nombre: subcategoria.nombre,
                         nombreCorto: nameShort(subcategoria.nombre),
+                        imagen: subcategoria.url
                     };
                     console.log(subCat);
                     addCat('subCatAdd2');
@@ -271,9 +339,12 @@ function guardarCat(id){
             break;
         
         case 3:
+            var url = document.getElementById('imgSubCat2').getAttribute("src");
+            if(url == "assets/imgs/no-image.png") url = "";
             subCat2 = {
                 nombre: document.getElementById('subcategoria2').value,
                 tipo: document.getElementById('selectServicio2').value,
+                imagen: url
             };
         
             if(validarCampos(subCat2)){
@@ -286,13 +357,15 @@ function guardarCat(id){
      
                     categoriaFinal[subCat.nombreCorto] = {
                         nombre: subCat.nombre,
+                        url: subCat.imagen
                     };
      
                     categoriaFinal[subCat.nombreCorto]['grupo'] = new Object();
      
                     categoriaFinal[subCat.nombreCorto]['grupo'][nameShort(subCat2.nombre)] = {
                      nombre: subCat2.nombre,
-                     tipo: subCat2.tipo
+                     tipo: subCat2.tipo,
+                     url: subCat2.imagen
                     }
                     
                 
@@ -314,7 +387,8 @@ function guardarCat(id){
                     subCat2 = {}
                     subCat2[nameShort(document.getElementById('subcategoria2').value)] ={
                         nombre : document.getElementById('subcategoria2').value,
-                        tipo: document.getElementById('selectServicio2').value
+                        tipo: document.getElementById('selectServicio2').value,
+                        url: url
                     };
 
                     var nomCategoria = document.getElementById("categoria").value;
@@ -322,12 +396,14 @@ function guardarCat(id){
                     if(subCat){
                         var categoriaFinal = {};
                         categoriaFinal[subCat['nombreCorto']] = {
-                            nombre: subCat['nombre']
+                            nombre: subCat['nombre'],
+                            url: subCat['imagen']
+
                         }
                         categoriaFinal[subCat['nombreCorto']]['grupo'] = {};
                         categoriaFinal[subCat['nombreCorto']]['grupo'] = subCat2;
 
-                        firebase.database().ref("categorias/"+nomCategoria).set(categoriaFinal); 
+                        firebase.database().ref("categorias/"+nomCategoria).update(categoriaFinal); 
                          Swal.fire({
                             type: 'success',
                             title: 'Muy bien',
@@ -344,7 +420,7 @@ function guardarCat(id){
                     else{
                         var nomSubategoria = document.getElementById("subcat1").value;
                         firebase.database().ref("categorias/"+nomCategoria+"/"+nomSubategoria+"/tipo").remove(); 
-                        firebase.database().ref("categorias/"+nomCategoria+"/"+nomSubategoria+"/grupo/").set(subCat2); 
+                        firebase.database().ref("categorias/"+nomCategoria+"/"+nomSubategoria+"/grupo/").update(subCat2); 
                         Swal.fire({
                             type: 'success',
                             title: 'Muy bien',
@@ -390,13 +466,35 @@ function validarCampos(objeto){
 
 }
 
-function foto(logo){
-    var foto = document.getElementById("InputImgCat");
+function foto(logo,id){
+    switch (id) {
+        case 1:
+        
+            var foto = document.getElementById("InputImgCat");
+            var img = document.getElementById("imgCat");
+
+            break;
+
+        case 2:
+
+            var foto = document.getElementById("InputImgSubCat");
+            var img = document.getElementById("imgSubCat");
+        
+            break;
+
+        case 3:
+
+            var foto = document.getElementById("InputImgSubCat2");
+            var img = document.getElementById("imgSubCat2");
+    
+            break;
+        
+    }
+
     console.log(foto.files);
     if(foto.files.length > 0){
         var reader = new FileReader();
         reader.onload = function (e){
-            var img = document.getElementById("imgCat");
             img.setAttribute("src",e.target.result);
         };
         reader.readAsDataURL(foto.files[0]);

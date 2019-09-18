@@ -1,3 +1,5 @@
+var tipoGrafica = getParameterByName('grafica');
+
 document.addEventListener('DOMContentLoaded',  async function() {
     var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
     await firebase.database().ref("proveedores/").on("value",(data)=>{
@@ -59,13 +61,32 @@ document.addEventListener('DOMContentLoaded',  async function() {
             }
         });
 
-        console.log(reqDen);
-        console.log(reqGen);
+        switch (tipoGrafica) {
 
-        drawGraf(reqGen,reqDen);
-        drawGrafConcept(conceptos);
-        drawGrafCumplimiento(reqGen,reqDen);
-        drawGrafproveedor(proveedoresMes,"proveedor")
+            case 'requisicion':
+                drawGraf(reqGen,reqDen);
+
+                break;
+
+            case 'concepto':
+                drawGrafConcept(conceptos);
+
+                break;
+
+            case 'cumplimiento':
+                drawGrafCumplimiento(reqGen,reqDen);
+
+                break;
+
+            case 'proveedor':
+                drawGrafproveedor(proveedoresMes,"proveedor")
+
+                break;
+                
+            default:
+                break;
+        }
+        
 
 
     });
@@ -91,8 +112,10 @@ document.addEventListener('DOMContentLoaded',  async function() {
                 }
 
             }
-            console.log(anuncios);
-            drawGrafproveedor(anuncios,"anuncios")
+
+            if(tipoGrafica == 'anuncios'){
+                drawGrafproveedor(anuncios,"anuncios")
+            }
 
         });
 
@@ -102,7 +125,11 @@ document.addEventListener('DOMContentLoaded',  async function() {
 });
 
 function drawGraf(reqGen,reqDen){
-    var ctx = document.getElementById('myChart');
+
+    var fila = document.getElementById('requisicion');
+    fila.classList.remove('invisible');
+
+    var ctx = document.getElementById('myChart').getContext('2d');;
 
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -121,7 +148,7 @@ function drawGraf(reqGen,reqDen){
                     'rgba(167, 45, 67, 1)'
 
                 ],
-                borderWidth: 1
+                borderWidth: 2
             }]
         },
         options: {
@@ -138,6 +165,10 @@ function drawGraf(reqGen,reqDen){
 }
 
 function drawGrafCumplimiento(reqGen,reqDen){
+
+    var fila = document.getElementById('cumplimientoFila');
+    fila.classList.remove('invisible');
+
     var reqAce = reqGen - reqDen;
     var porcentaje = (reqAce * 100) / reqGen;
     var ctx = document.getElementById('cumplimiento');
@@ -172,6 +203,10 @@ function drawGrafCumplimiento(reqGen,reqDen){
 }
 
 function drawGrafConcept(data){
+
+    var fila = document.getElementById('conceptoFila');
+    fila.classList.remove('invisible');
+
     var labels = [];
     var valores = [];
     data.map((data)=>{
@@ -210,6 +245,11 @@ function drawGrafConcept(data){
 }
 
 function drawGrafproveedor(data,id){
+
+    var idFila = (id == "proveedor") ? "proveedorFila" : "anunciosFila"
+    var fila = document.getElementById(idFila);
+    fila.classList.remove('invisible');
+
     var labels = [];
     var valores = [];
     data.map((data)=>{
@@ -247,4 +287,11 @@ function drawGrafproveedor(data,id){
         }
     });
     
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }

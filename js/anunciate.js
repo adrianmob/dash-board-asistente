@@ -2,6 +2,9 @@ var anuncios = [];
 document.addEventListener('DOMContentLoaded', async function() {
     await firebase.database().ref("anunciate/").on("value",(data)=>{
         var fila = document.getElementById("fila");
+        while(fila.firstChild){
+            fila.removeChild(fila.firstChild);
+        }
         for (const key in data.val()) {
 
             var contenedor = document.createElement("DIV");
@@ -55,8 +58,35 @@ document.addEventListener('DOMContentLoaded', async function() {
             telefono.appendChild(telIcono);
             telefono.appendChild(telText);
 
+            var fecha = document.createElement("DIV");
+            fecha.classList.add("infoText");
+
+            var fechaIcono = document.createElement("I");
+            fechaIcono.classList.add("material-icons");
+            fechaIcono.classList.add("blue-text");
+            fechaIcono.classList.add("text-darken-2");
+            fechaIcono.classList.add("icono");
+            fechaIcono.innerHTML = "access_time";
+
+            var fechaText = document.createElement("SPAN");
+            fechaText.innerHTML = fechaChange(data.val()[key]['fecha']);
+
+            fecha.appendChild(fechaIcono);
+            fecha.appendChild(fechaText);
+
+            var boton = document.createElement("a");
+            boton.classList.add("waves-effect");
+            boton.classList.add("waves-light");
+            boton.classList.add("btn");
+            boton.classList.add("boton");
+            boton.innerHTML = "Atendido";
+            boton.onclick = completar.bind(this,[key]);
+
             info.appendChild(correo);
             info.appendChild(telefono);
+            info.appendChild(fecha);
+            info.appendChild(boton);
+
 
             cardCont.appendChild(titulo)
             cardCont.appendChild(info);
@@ -74,3 +104,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 
 });
+
+function fechaChange(fecha){
+    var fechaHora = "";
+    var fechaMil = new Date(fecha);
+    return fechaHora = fechaMil.getDate() + "/" + (fechaMil.getMonth()+1) + "/" + fechaMil.getFullYear() +" " + fechaMil.getHours()+":"+fechaMil.getMinutes();
+}
+
+function completar(args,event){
+    firebase.database().ref("anunciate/"+args[0]).remove();
+
+}

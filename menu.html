@@ -5,7 +5,22 @@
         <li><a class="white-text" href="comentarios.html">Comentarios</a></li>
         <li><a class="white-text" href="anunciate.html">Anuncios</a></li>
         <li><a class="white-text" href="anuncios.html">Crear anuncio</a></li>
-        <li><a class="white-text" href="graficas.html">Graficos</a></li>
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+              <li>
+                <a class="collapsible-header white-text">Graficos<i class="material-icons white-text">arrow_drop_down</i></a>
+                <div class="collapsible-body">
+                  <ul>
+                    <li class="grey darken-3" ><a class="white-text" href="graficas.html?grafica=requisicion">Requisiciones</a></li>
+                    <li class="grey darken-3"><a class="white-text" href="graficas.html?grafica=concepto">Requisiciones por Concepto</a></li>
+                    <li class="grey darken-3"><a class="white-text" href="graficas.html?grafica=cumplimiento">Porcentaje de cumplimiento</a></li>
+                    <li class="grey darken-3"><a class="white-text" href="graficas.html?grafica=proveedor">Proveedores por mes</a></li>
+                    <li class="grey darken-3"><a class="white-text" href="graficas.html?grafica=anuncios">Anuncios por mes</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </li>
 
     </ul>
     <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a> 
@@ -36,7 +51,7 @@
                 <label for="nombre">Nombre de la categoria</label>
               </div>
               <div class="file-field input-field">
-                  <div class="btn" onchange="foto(true)">
+                  <div class="btn" onchange="foto(true,1)">
                       <span>Escoge imagen de categoria</span>
                       <input class="data" type="file" id="InputImgCat">
                   </div>
@@ -79,7 +94,21 @@
                   <span class="lever"></span>
                   No
                 </label>
+            </div>
+            <div class="col 12 ContImgContSubCat">
+              <div class="file-field input-field">
+                <div class="btn" onchange="foto(true,2)">
+                  <span>Escoge imagen de categoria</span>
+                  <input class="data" type="file" id="InputImgSubCat">
+                </div>
+                <div class="file-path-wrapper oculto">
+                  <input class="file-path validate" type="text" id="InputImgText">
+                </div>
               </div>
+              <div class="imgContSubCat">
+                <img id="imgSubCat" src="assets/imgs/no-image.png" class="responsive-img" alt="imagen categoria">
+              </div>
+            </div>
             <div class="input-field col s12 invisible" id="servicio">
               <select id="selectServicio">
                 <option value="" disabled selected>Escoge un servicio</option>
@@ -91,7 +120,7 @@
               <label>Servicio</label>
             </div>
             <div class="col s12">
-                <a class="waves-effect waves-light btn guardar" onclick="guardarCat(2)">Guardar</a>
+              <a class="waves-effect waves-light btn guardar" onclick="guardarCat(2)">Guardar</a>
             </div>
           </div>
           <!-- SUBCATEGORIA2 SELECT-->
@@ -112,7 +141,21 @@
               <input id="subcategoria2" type="text" class="validate">
               <label for="subcategoria2">Nombre de la categoria</label>
             </div>
-            <div class="input-field col s6">
+            <div class="col 12 ContImgContSubCat">
+                <div class="file-field input-field">
+                  <div class="btn" onchange="foto(true,3)">
+                    <span>Escoge imagen de categoria</span>
+                    <input class="data" type="file" id="InputImgSubCat2">
+                  </div>
+                  <div class="file-path-wrapper oculto">
+                    <input class="file-path validate" type="text" id="InputImgText">
+                  </div>
+                </div>
+                <div class="imgContSubCat">
+                  <img id="imgSubCat2" src="assets/imgs/no-image.png" class="responsive-img" alt="imagen categoria">
+                </div>
+            </div>
+            <div class="input-field col s12">
               <select id="selectServicio2">
                 <option value="" disabled selected>Escoge un servicio</option>
                 <option value="3">Elección</option>
@@ -136,20 +179,45 @@
       <!-- Modal Structure 2 -->
   <div id="modal2" class="modal modal-fixed-footer">
       <div class="modal-content">
-        <h3>Numero de telefonos</h3>
-        <div class="row">
-          <div class="input-field col s6">
-            <input id="tercero" type="text" class="validate">
-            <label for="tercero">Numero de tercero</label>
-          </div>
-          <div class="input-field col s6">
-            <input id="reparto" type="text" class="validate">
-            <label for="reparto">Numero de reparto</label>
-          </div>
+          <div class="row">
+              <div class="col s12">
+                <ul class="tabs">
+                  <li class="tab col s3"><a class="active" href="#test1">Proveedor</a></li>
+                  <li class="tab col s3"><a href="#test2">Reparto</a></li>
+                </ul>
+              </div>
+              <div id="test1" class="col s12">
+                <h5>Agregar proveedor tercero</h5>
+                <div class="row">
+                  <div class="col s6 input-field">
+                    <input id="correoProveedorTer" type="email" class="validate">
+                    <label for="correoProveedorTer">Correo</label>
+                  </div>
+                  <div class="col s6 input-field">
+                    <input id="passwordProveedorTer" type="password" class="validate">
+                    <label for="passwordProveedorTer">Contraseña</label>
+                  </div>
+                </div>
+                <a class="waves-effect waves-light btn guardar" onclick="guardarProveedor()">Guardar</a>
+              </div>
+              <div id="test2" class="col s12">
+                <h5>Agregar Repartidor</h5>
+                <div class="row">
+                  <div class="col s6 input-field">
+                    <input id="correoRepartidor" type="email" class="validate">
+                    <label for="correoRepartidor">Correo</label>
+                  </div>
+                  <div class="col s6 input-field">
+                    <input id="passwordRepartidor" type="password" class="validate">
+                    <label for="passwordRepartidor">Contraseña</label>
+                  </div>
+                </div>
+                <a class="waves-effect waves-light btn guardar" onclick="guardarRepartidor()">Guardar</a>
+              </div>
+            </div>
         </div>
-      </div>
       <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat" onclick="numeros()">Agree</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">cerrar</a>
       </div>
     </div>
 

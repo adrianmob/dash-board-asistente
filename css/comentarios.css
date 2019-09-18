@@ -6,3 +6,9 @@
 .icono{
     margin-right: 20px;
 }
+
+.boton{
+    margin: 0 auto;
+    display: block;
+    width: fit-content;
+}
