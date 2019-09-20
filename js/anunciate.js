@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             boton.classList.add("btn");
             boton.classList.add("boton");
             boton.innerHTML = "Atendido";
-            boton.onclick = completar.bind(this,[key]);
+            boton.onclick = completar.bind(this,[key,anuncios.length]);
 
             info.appendChild(correo);
             info.appendChild(telefono);
@@ -113,5 +113,6 @@ function fechaChange(fecha){
 
 function completar(args,event){
     firebase.database().ref("anunciate/"+args[0]).remove();
+    firebase.database().ref("historialAnunciate/").push(anuncios[args[1]]);    
 
 }

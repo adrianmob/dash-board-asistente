@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
             boton.classList.add("btn");
             boton.classList.add("boton");
             boton.innerHTML = "Atendido";
-            boton.onclick = completar.bind(this,[key]);
+            boton.onclick = completar.bind(this,[key,comentarios.length]);
 
             info.appendChild(correo);
             info.appendChild(telefono);
@@ -134,5 +134,6 @@ function fechaChange(fecha){
 
 function completar(args,event){
     firebase.database().ref("comentarios/"+args[0]).remove();
+    firebase.database().ref("historialComentarios/").push(anuncios[args[1]]);    
 
 }

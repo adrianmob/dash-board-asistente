@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         for (const categoria in data.val()) {
             index++;
             for (const subcategoria in data.val()[categoria]) {
-                if(subcategoria !== 'nombre' && subcategoria !== 'url'){
+                if(subcategoria !== 'nombre' && subcategoria !== 'url' && subcategoria !== 'show'){
                 if(data.val()[categoria][subcategoria].hasOwnProperty("grupo")){
                     var grupos = [];
                     for (const subcategoria2 in data.val()[categoria][subcategoria]["grupo"]) {
@@ -101,6 +101,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
             }
             else{
+                if(categorias[index] === undefined){
+                    categorias[index]= [];
+                    categorias[index]['categoria'] = categoria;
+                }
+
                 if(subcategoria == 'nombre'){
                     categorias[index]['nombre'] = data.val()[categoria][subcategoria];
                 }
@@ -283,7 +288,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
 
   function subCatSelect(){
-      debugger;
     var selVal = document.getElementById("select2");
     tipo = selVal.options[selVal.selectedIndex].getAttribute('tipo');
     var imgCont = document.getElementsByClassName("imgLogoCont");

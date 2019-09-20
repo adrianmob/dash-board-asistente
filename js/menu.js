@@ -15,14 +15,20 @@ var cat;
 var subCat;
 var subCat2;
 
-async function cargaData(){
+async function cargaData(modal){
     cat = undefined;
     subCat = undefined;
     subCat2 = undefined;
+    if(modal == 1){
+        var element = document.getElementById("categoria"); 
+    }
+    else{
+        var element = document.getElementById("categoriaOcultar"); 
+    }
+
     await firebase.database().ref("categorias/").once("value",(data)=>{
         objetoCat = data.val();
         var node;
-        var element = document.getElementById("categoria"); 
         console.log(element);
         while (element.firstChild) {
             element.removeChild(element.firstChild);
@@ -188,6 +194,48 @@ function showSubCat(id){
 
     var select = document.querySelectorAll('select');
     var selectInst = M.FormSelect.init(select);
+
+}
+
+function showOcultar(){
+    var elemento = document.getElementById('categoriaOcultar').value;
+    var selectOculat = document.getElementById('ocultar');
+  
+    if( objetoCat[elemento].hasOwnProperty('show')){
+        selectOculat.value = 2;
+    }
+    else{
+        selectOculat.value = 1;
+    }
+
+    var select = document.querySelectorAll('select');
+    var selectInst = M.FormSelect.init(select);
+
+}
+
+function guardarBloqueOculto(){
+    var selectCat = document.getElementById('categoriaOcultar').value;
+    var selectOcultar = document.getElementById('ocultar').value;
+    var estado;
+    if(selectOcultar == 1){
+        estado = false;
+    }
+    else{
+        estado = true;
+    }
+    firebase.database().ref("categorias/"+selectCat).update({
+        show: estado
+    });
+    Swal.fire({
+        type: 'success',
+        title: 'Muy bien',
+        text: 'Bloque cambiado',
+        onClose: () => {
+            var eleModal = document.querySelectorAll('.modal');
+            var instance = M.Modal.getInstance(eleModal[2]);
+            instance.close();
+          }
+    }); 
 
 }
 

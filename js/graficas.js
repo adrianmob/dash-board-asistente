@@ -1,5 +1,5 @@
 var tipoGrafica = getParameterByName('grafica');
-
+var proveedoresCali = [];
 document.addEventListener('DOMContentLoaded',  async function() {
     var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
     await firebase.database().ref("proveedores/").on("value",(data)=>{
@@ -14,10 +14,11 @@ document.addEventListener('DOMContentLoaded',  async function() {
         for (const key in proveedor){
             agregado = false;
             reqGen += proveedor[key]['requisicionesAceptadas'];
-            if(proveedor[key]['subCategoria'] != key){
-                    proveedores.push({
-                        fecha: proveedor[key]['fechaRegistro']
-                    });
+            if(proveedor[key]['subCategoria'] != key && key!== 'tercero'&& key!== 'repartidor'){
+                proveedores.push({
+                    fecha: proveedor[key]['fechaRegistro']
+                });
+                proveedoresCali.push({nombre: proveedor[key]['nombre'],key:key});
                 conceptos.map((data)=>{
                     if(data.nombre == proveedor[key]['subCategoria']){
                         data.requisiciones += proveedor[key]['requisicionesAceptadas'];
@@ -83,7 +84,8 @@ document.addEventListener('DOMContentLoaded',  async function() {
 
                 break;
                 
-            default:
+            case 'calificacion':
+                drawCalificacion()
                 break;
         }
         
@@ -113,6 +115,8 @@ document.addEventListener('DOMContentLoaded',  async function() {
 
             }
 
+            console.log(anuncios);
+
             if(tipoGrafica == 'anuncios'){
                 drawGrafproveedor(anuncios,"anuncios")
             }
@@ -124,12 +128,151 @@ document.addEventListener('DOMContentLoaded',  async function() {
 
 });
 
+function drawCalificacion(){
+    firebase.database().ref("pedidos-finalizados/").on("value",(data)=>{
+        var objPedidos = data.val();
+        var allProveedores = [];
+        for (const key in objPedidos) {
+            var objPedido = objPedidos[key];
+            for (const child in objPedido) {
+                if(objPedido[child].hasOwnProperty('calificacion')){
+                    allProveedores.push({id: key,calificacion: objPedido[child]['calificacion']});
+                }
+            }
+        }
+
+        for (let index = 0; index < allProveedores.length; index++) {
+            let contador = 1;
+            for (let j = 1; j < allProveedores.length; j++) {
+                if(allProveedores[index]['id'] == allProveedores[j]['id']){
+                    contador++;
+                    allProveedores[index]['calificacion'] += allProveedores[j]['calificacion'];
+                    allProveedores[index]['numeroCali'] = contador;
+                    allProveedores.splice(j,j);
+                }
+                
+            }
+            
+        }
+
+        allProveedores.map((data)=>{
+            data['calificacion'] = data['calificacion'] / data['numeroCali'];
+            delete data['numeroCali'];
+
+        });
+
+        var ordenArray = [];
+        ordenArray = allProveedores.sort((a, b) => {
+            return a['calificacion'] - b['calificacion'];
+        } );
+
+        ordenArray.map((data)=>{
+            proveedoresCali.map((proveedor)=>{
+                if(proveedor['key'] == data['id']){
+                    data['nombre'] = proveedor['nombre']
+                }
+            });
+        });
+
+        let mejores = [];
+        let peores = [];
+
+        mejores = ordenArray.slice(0,5);
+        if(peores.length >5) peores = ordenArray.slice((ordenArray.length - 5),ordenArray.length);
+        console.log(mejores);
+        console.log(peores);
+
+        var labelsMejores = [];
+        var valoresMejores = [];
+
+        mejores.map((data)=>{
+            labelsMejores.push(data['nombre']);
+            valoresMejores.push(data['calificacion']);
+        });
+
+        var labelsPeores = [];
+        var valoresPeores = [];
+
+        peores.map((data)=>{
+            labelsPeores.push(data['nombre']);
+            valoresPeores.push(data['calificacion']);
+        });
+
+        var ctx = document.getElementById('goodCalificacion').getContext('2d');
+        var ctx2 = document.getElementById('badCalificacion').getContext('2d');
+
+        var fila = document.getElementById('calificacionFila');
+        fila.classList.remove('invisible');
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labelsMejores,
+                datasets: [{
+                    label: 'Mejores proveedores calificados',
+                    data: valoresMejores,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+    
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+    
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        var myChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: labelsPeores,
+                datasets: [{
+                    label: 'Peores proveedores calificados',
+                    data: valoresPeores,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+    
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+    
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+
+    });
+
+}
+
 function drawGraf(reqGen,reqDen){
 
     var fila = document.getElementById('requisicion');
     fila.classList.remove('invisible');
 
-    var ctx = document.getElementById('myChart').getContext('2d');;
+    var ctx = document.getElementById('myChart').getContext('2d');
 
     var myChart = new Chart(ctx, {
         type: 'bar',

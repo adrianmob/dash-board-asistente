@@ -1,7 +1,8 @@
 <ul id="slide-out" class="sidenav sidenav-fixed grey darken-4">
         <li><a class="white-text" href="index.html">Agregar proveedores</a></li>
-        <li><a class="modal-trigger white-text" href="#modal1" onclick="cargaData()">Carga de bloque</a></li>
+        <li><a class="modal-trigger white-text" href="#modal1" onclick="cargaData(1)">Carga de bloque</a></li>
         <li><a class="modal-trigger white-text" href="#modal2">Numero de telefonos</a></li>
+        <li><a class="modal-trigger white-text" href="#modal3" onclick="cargaData(2)">Ocultar bloques</a></li>
         <li><a class="white-text" href="comentarios.html">Comentarios</a></li>
         <li><a class="white-text" href="anunciate.html">Anuncios</a></li>
         <li><a class="white-text" href="anuncios.html">Crear anuncio</a></li>
@@ -16,6 +17,7 @@
                     <li class="grey darken-3"><a class="white-text" href="graficas.html?grafica=cumplimiento">Porcentaje de cumplimiento</a></li>
                     <li class="grey darken-3"><a class="white-text" href="graficas.html?grafica=proveedor">Proveedores por mes</a></li>
                     <li class="grey darken-3"><a class="white-text" href="graficas.html?grafica=anuncios">Anuncios por mes</a></li>
+                    <li class="grey darken-3"><a class="white-text" href="graficas.html?grafica=calificacion">Evaluación proveedor</a></li>
                   </ul>
                 </div>
               </li>
@@ -220,6 +222,35 @@
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">cerrar</a>
       </div>
     </div>
+
+          <!-- Modal Structure 2 -->
+  <div id="modal3" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h3>Ocular bloques</h3>
+      <div class="row">
+        <div class="input-field col s12">
+            <select id="categoriaOcultar" onchange="showOcultar()">
+              <option value="" disabled selected>Escoge una categoria</option>
+            </select>
+            <label>Categoria</label>
+        </div>
+        
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <select id="ocultar">
+            <option value="1">Ocultar</option>
+            <option value="2">Mostrar</option>
+          </select>
+          <label>Categoria</label>
+        </div>  
+      </div>
+      <a class="waves-effect waves-light btn guardar" onclick="guardarBloqueOculto()">Guardar</a>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">cerrar</a>
+    </div>
+  </div>
 
 
 
