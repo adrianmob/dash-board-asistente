@@ -1,8 +1,7 @@
-var comentarios = [];
-document.addEventListener('DOMContentLoaded', function() {
-     firebase.database().ref("comentarios/").on("value",(data)=>{
+var anuncios = [];
+document.addEventListener('DOMContentLoaded', async function() {
+    await firebase.database().ref("historialAnunciate/").on("value",(data)=>{
         var fila = document.getElementById("fila");
-
         while(fila.firstChild){
             fila.removeChild(fila.firstChild);
         }
@@ -22,10 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var titulo = document.createElement("SPAN");
             titulo.classList.add("card-title");
-            var nombre = (data.val()[key]['apellidoPat']) ? data.val()[key]['apellidoPat']+' ' : "";
-            nombre += (data.val()[key]['apellidoMat']) ? data.val()[key]['apellidoMat']+' ' : "";
-            nombre += data.val()[key]['nombre'];
-            titulo.innerHTML = nombre;
+            titulo.innerHTML = data.val()[key]['apellidoPat'] + " " + data.val()[key]['apellidoMat'] + " " + data.val()[key]['nombre'];
 
             var info = document.createElement("DIV");
             info.classList.add("info");
@@ -62,22 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
             telefono.appendChild(telIcono);
             telefono.appendChild(telText);
 
-            var comentario = document.createElement("DIV");
-            comentario.classList.add("infoText");
-
-            var comIcono = document.createElement("I");
-            comIcono.classList.add("material-icons");
-            comIcono.classList.add("blue-text");
-            comIcono.classList.add("text-darken-2");
-            comIcono.classList.add("icono");
-            comIcono.innerHTML = "comment";
-
-            var comText = document.createElement("SPAN");
-            comText.innerHTML = data.val()[key]['comentario'];
-
-            comentario.appendChild(comIcono);
-            comentario.appendChild(comText);
-
             var fecha = document.createElement("DIV");
             fecha.classList.add("infoText");
 
@@ -94,19 +74,9 @@ document.addEventListener('DOMContentLoaded', function() {
             fecha.appendChild(fechaIcono);
             fecha.appendChild(fechaText);
 
-            var boton = document.createElement("a");
-            boton.classList.add("waves-effect");
-            boton.classList.add("waves-light");
-            boton.classList.add("btn");
-            boton.classList.add("boton");
-            boton.innerHTML = "Atendido";
-            boton.onclick = completar.bind(this,[key,comentarios.length]);
-
             info.appendChild(correo);
             info.appendChild(telefono);
-            info.appendChild(comentario);
             info.appendChild(fecha);
-            info.appendChild(boton);
 
             cardCont.appendChild(titulo)
             cardCont.appendChild(info);
@@ -118,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fila.appendChild(contenedor);
 
 
-            comentarios.push(data.val()[key]);
+            anuncios.push(data.val()[key]);
 
         }
     });
@@ -130,3 +100,4 @@ function fechaChange(fecha){
     var fechaMil = new Date(fecha);
     return fechaHora = fechaMil.getDate() + "/" + (fechaMil.getMonth()+1) + "/" + fechaMil.getFullYear() +" " + fechaMil.getHours()+":"+fechaMil.getMinutes();
 }
+

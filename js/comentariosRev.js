@@ -1,6 +1,6 @@
 var comentarios = [];
 document.addEventListener('DOMContentLoaded', function() {
-     firebase.database().ref("comentarios/").on("value",(data)=>{
+     firebase.database().ref("historialComentarios/").on("value",(data)=>{
         var fila = document.getElementById("fila");
 
         while(fila.firstChild){
@@ -94,19 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
             fecha.appendChild(fechaIcono);
             fecha.appendChild(fechaText);
 
-            var boton = document.createElement("a");
-            boton.classList.add("waves-effect");
-            boton.classList.add("waves-light");
-            boton.classList.add("btn");
-            boton.classList.add("boton");
-            boton.innerHTML = "Atendido";
-            boton.onclick = completar.bind(this,[key,comentarios.length]);
-
             info.appendChild(correo);
             info.appendChild(telefono);
             info.appendChild(comentario);
             info.appendChild(fecha);
-            info.appendChild(boton);
 
             cardCont.appendChild(titulo)
             cardCont.appendChild(info);
@@ -118,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fila.appendChild(contenedor);
 
 
-            comentarios.push(data.val()[key]);
+            comentarios.unshift(data.val()[key]);
 
         }
     });
