@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Asistente</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Estilos principales-->
+    <link rel="stylesheet" href="css/estilos.css">
+    <!--iconos-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+    <header id="header"></header>
+
+    <main>
+        <div class="principal">
+            <h5 class="titulo">Ordenar categorias</h5>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select id="categoriaOrdenar" onchange="showCats()">
+                        <option value="" disabled selected>Escoge una categoria</option>
+                    </select>
+                    <label>Categoria</label>
+                </div>         
+            </div>
+            <div class="row invisible" id="multCat">
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col s6"><a id="tab1" class="active" href="#cat1">Test 1</a></li>
+                        <li class="tab col s6"><a id="tab2" href="#cat2">Test 2</a></li>
+                    </ul>
+                </div>
+                <div id="cat1" class="col s12">
+                        <ul class='collection' id="imagenesCat1"></ul>
+                </div>
+                <div id="cat2" class="col s12">
+                        <ul class='collection' id="imagenesCat2"></ul>
+                </div>
+                <div class="col s12">
+                        <a class="waves-effect waves-light btn registrar" onclick="cambiarOrdenMulti()">Guardar Orden</a>
+                </div>
+            </div>
+            <div class="row invisible" id="singleCat">
+                <ul class='collection' id="imagenesCat"></ul>
+                <div class="col s12">
+                    <a class="waves-effect waves-light btn registrar" onclick="cambiarOrden()">Guardar Orden</a>
+                </div>
+            </div> 
+        </div>
+    </main>
+
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAyowK8q1-Ibrrm-HcPOkb19b458OV4yuA",
+            authDomain: "asistente-db380.firebaseapp.com",
+            databaseURL: "https://asistente-db380.firebaseio.com",
+            projectId: "asistente-db380",
+            storageBucket: "asistente-db380.appspot.com",
+            messagingSenderId: "544411053198",
+            appId: "1:544411053198:web:a30415520547d8c4"
+        };
+        firebase.initializeApp(firebaseConfig);
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+     <!-- Compiled and minified JavaScript -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="js/menu.js"></script>
+    <script>
+        var header = document.getElementById("header");
+        var req = new XMLHttpRequest();
+        req.open("GET", "menu.html", false);
+        req.send(null);
+        header.innerHTML = req.responseText; 
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.0/Sortable.js"></script>
+    <script src="js/ordernarLista.js"></script>
+</body>
+</html>
