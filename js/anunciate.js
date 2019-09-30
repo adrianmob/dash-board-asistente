@@ -21,7 +21,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             var titulo = document.createElement("SPAN");
             titulo.classList.add("card-title");
-            titulo.innerHTML = data.val()[key]['apellidoPat'] + " " + data.val()[key]['apellidoMat'] + " " + data.val()[key]['nombre'];
+            var nombre = (data.val()[key]['apellidoPat']) ? data.val()[key]['apellidoPat']+' ' : "";
+            nombre += (data.val()[key]['apellidoMat']) ? data.val()[key]['apellidoMat']+' ' : "";
+            nombre += data.val()[key]['nombre'];
+            titulo.innerHTML = nombre;
 
             var info = document.createElement("DIV");
             info.classList.add("info");

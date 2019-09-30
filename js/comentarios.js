@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             var comText = document.createElement("SPAN");
             comText.innerHTML = data.val()[key]['comentario'];
+            comText.classList.add('comentario');
 
             comentario.appendChild(comIcono);
             comentario.appendChild(comText);
@@ -130,3 +131,10 @@ function fechaChange(fecha){
     var fechaMil = new Date(fecha);
     return fechaHora = fechaMil.getDate() + "/" + (fechaMil.getMonth()+1) + "/" + fechaMil.getFullYear() +" " + fechaMil.getHours()+":"+fechaMil.getMinutes();
 }
+
+function completar(args,event){
+    firebase.database().ref("comentarios/"+args[0]).remove();
+    firebase.database().ref("historialComentarios/").push(comentarios[args[1]]);    
+
+}
+

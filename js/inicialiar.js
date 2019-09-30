@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       
       var body = {
-          nombre: document.getElementById("nombre").value,
+          nombre: document.getElementById("nombrePro").value,
           correo: document.getElementById("correo").value,
           password: document.getElementById("pass1").value,
           contacto: document.getElementById("telefono").value,
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
 
-  function foto(logo){
+  function fotoLogo(logo){
     var foto = document.getElementById("logo");
     console.log(foto.files);
     if(foto.files.length > 0){

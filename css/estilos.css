@@ -114,6 +114,11 @@ main {
   width: 532px;
 }
 
+.comentario{
+  overflow: scroll;
+  height: 60px;
+}
+
 
   @media only screen and (max-width : 992px) {
     main {
