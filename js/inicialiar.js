@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                         }
 
                     }
-                    console.log(categoria);
                     if(categorias[index] === undefined){
                         categorias[index] = new Array({
                             nombre: subcategoria,
@@ -90,6 +89,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                         categorias[index] = new Array({...data.val()[categoria][subcategoria],
                                                         valor: subcategoria});
                         categorias[index]['categoria'] = categoria;
+                        if( categoria == 'emergencia' )
+                        {
+
+                            categorias[index].push({
+                                nombre: "Panico",
+                                valor: 'panico'
+                            });
+                        }
 
         
                     }
@@ -101,11 +108,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
             }
             else{
-                if(categorias[index] === undefined){
-                    categorias[index]= [];
-                    categorias[index]['categoria'] = categoria;
-                }
-
                 if(subcategoria == 'nombre'){
                     categorias[index]['nombre'] = data.val()[categoria][subcategoria];
                 }
