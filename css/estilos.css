@@ -114,6 +114,17 @@ main {
   width: 532px;
 }
 
+.img-catPri-ord{
+  width: 300px;
+}
+
+.input-cat-ord
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .comentario{
   overflow: scroll;
   height: 60px;

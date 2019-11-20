@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 element.add(node);
                     
             }
+
+            node = document.createElement("OPTION");
+            node.innerHTML = 'Principal';
+            node.setAttribute("value",'all');
+            element.add(node);
+
             var select = document.querySelectorAll('select');
             var selectInst = M.FormSelect.init(select);
             showCats();
@@ -23,13 +29,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 function showCats(){
 
     var Cat = document.getElementById('categoriaOrdenar').value;
-    var elemento = document.getElementById('categoriaOrdenar').value;
+    var elemento = ( Cat == 'all') ? '' : document.getElementById('categoriaOrdenar').value;
 
     firebase.database().ref("categorias/"+elemento).once("value",(data)=>{
         let categorias = [];
         let tipo = 0;
         for (const key in data.val()) {
-            if(key !== 'nombre' && key !== 'show' && key !== 'url'){
+            if(key !== 'nombre' && key !== 'show' && key !== 'url' && key !== 'posicion'){
                 if(Cat == 'compraRenta'){
                     if(!data.val()[key].hasOwnProperty('url')){
                         tipo = 1;
@@ -64,6 +70,7 @@ function showCats(){
                 }
                     else{
                         var objetoCat = data.val()[key];
+                        console.log(objetoCat);
                         guardarCategoria(categorias,objetoCat, key)
                     }
             }
@@ -71,7 +78,7 @@ function showCats(){
 
         switch (tipo) {
             case 0:
-                OrdenarArraySingle(categorias);
+                OrdenarArraySingle(categorias,elemento);
                 break;
             case 1:
                 OrdenarArrayMulti(categorias,'renta','compra');
@@ -86,15 +93,25 @@ function showCats(){
 }
 
 function cambiarOrden(){
+
     var subCat = document.getElementById("imagenesCat");
     var Cat = document.getElementById('categoriaOrdenar').value;
     var contador = 1;
     for (let index = 0; index < subCat.childNodes.length; index++) {
        var key = subCat.childNodes[index].getAttribute('data-key');
-       firebase.database().ref("categorias/"+Cat+'/'+key).update({
-           posicion: contador
-        });
-        contador++;
+       if ( Cat == 'all' )
+       {
+        firebase.database().ref("categorias/"+key).update({
+            posicion: contador
+         });
+       }
+       else{
+        firebase.database().ref("categorias/"+Cat+'/'+key).update({
+            posicion: contador
+         });
+       }
+  
+        contador++; 
         
     }
     Swal.fire({
@@ -157,7 +174,11 @@ function guardarCategoria(arrar, objCat, key){
     }
 }
 
-function OrdenarArraySingle(array){
+function OrdenarArraySingle(array, elemento)
+{
+
+    console.log(elemento);
+
     var imagenes = document.getElementById('imagenesCat');
     while (imagenes.firstChild) {
         imagenes.removeChild(imagenes.firstChild);
@@ -173,17 +194,23 @@ function OrdenarArraySingle(array){
     categoriasOrdenada.map((data)=>{
         var itemLista = document.createElement("li");
         itemLista.classList.add("collection-item");
+        itemLista.classList.add("input-cat-ord");
         itemLista.setAttribute("data-key",data['key']);
     
         var itemImg = document.createElement("img");
-        itemImg.classList.add("img-cat-ord");
+        if(elemento != '')
+            itemImg.classList.add("img-cat-ord");
+        else            
+            itemImg.classList.add("img-catPri-ord");
+
         itemImg.setAttribute("src",data['url']);
     
         itemLista.appendChild(itemImg);
         imagenes.appendChild(itemLista);
     });
 
-    if(!Sortable.get(imagenes)){
+    if(!Sortable.get(imagenes))
+    {
 
         new Sortable(imagenes, {
             animation: 150,
