@@ -46,6 +46,36 @@ async function cargaData(modal){
 
 }
 
+function ocultar_bloques()
+{
+    var element = document.getElementById("categoriaOcultar"); 
+    firebase.database().ref("categorias/").once("value",(data)=>{
+        objetoCat = data.val();
+        var node;
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }       
+        for (const key in objetoCat) {
+            node = document.createElement("OPTION");
+            node.innerHTML = objetoCat[key]['nombre'];
+            node.setAttribute("value",key);
+            element.add(node);
+                
+        }
+
+        node = document.createElement("OPTION");
+        node.innerHTML = 'Principal';
+        node.setAttribute("value",'all');
+        element.add(node);
+
+        var select = document.querySelectorAll('select');
+        var selectInst = M.FormSelect.init(select);
+
+        showBloque();
+    });
+
+}
+
 function guardarRepartidor(){
     var correo = document.getElementById('correoRepartidor').value;
     var pass = document.getElementById('passwordRepartidor').value;
@@ -197,16 +227,57 @@ function showSubCat(id){
 
 }
 
-function showOcultar(){
+function showBloque(){
     var elemento = document.getElementById('categoriaOcultar').value;
-    var selectOculat = document.getElementById('ocultar');
-  
-    if( objetoCat[elemento].hasOwnProperty('show')){
-        selectOculat.value = 2;
+    var bloque = document.getElementById('bloque');
+    var node, objeto;
+
+    console.log(objetoCat);
+
+    while (bloque.firstChild) {
+        bloque.removeChild(bloque.firstChild);
     }
-    else{
-        selectOculat.value = 1;
+
+
+
+    if ( elemento == 'all')
+        objeto = objetoCat;
+
+    else
+        objeto = objetoCat[elemento];
+
+    for (const key in objeto ) 
+    {
+        if( key != 'nombre' && key != 'posicion' && key != 'show' && key != 'url' )
+        {
+
+            if( key == 'RENTA' || key == 'Servicio')
+            {
+                for (const key_grupo in objeto[key]['grupo']) 
+                {
+                    node = document.createElement("OPTION");
+                    node.innerHTML = objeto[key]['grupo'][key_grupo]['nombre'];
+                    node.setAttribute("value",elemento+'/'+key+'/grupo/'+key_grupo);
+                    bloque.add(node);
+                }
+            }
+            else
+            {
+                node = document.createElement("OPTION");
+                node.innerHTML = objeto[key]['nombre'];
+                node.setAttribute("value",elemento+'/'+key);
+                bloque.add(node);
+            }
+         
+        }
     }
+
+    // if( objetoCat[elemento].hasOwnProperty('show')){
+    //     selectOculat.value = 2;
+    // }
+    // else{
+    //     selectOculat.value = 1;
+    // }
 
     var select = document.querySelectorAll('select');
     var selectInst = M.FormSelect.init(select);
@@ -214,7 +285,7 @@ function showOcultar(){
 }
 
 function guardarBloqueOculto(){
-    var selectCat = document.getElementById('categoriaOcultar').value;
+    var selectCat = document.getElementById('bloque').value;
     var selectOcultar = document.getElementById('ocultar').value;
     var estado;
     if(selectOcultar == 1){
@@ -223,6 +294,7 @@ function guardarBloqueOculto(){
     else{
         estado = true;
     }
+
     firebase.database().ref("categorias/"+selectCat).update({
         show: estado
     });

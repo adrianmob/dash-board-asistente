@@ -2,7 +2,7 @@
         <li><a class="white-text" href="index.html">Agregar proveedores</a></li>
         <li><a class="modal-trigger white-text" href="#modal1" onclick="cargaData(1)">Carga de bloque</a></li>
         <li><a class="modal-trigger white-text" href="#modal2">Numero de telefonos</a></li>
-        <li><a class="modal-trigger white-text" href="#modal3" onclick="cargaData(2)">Ocultar bloques</a></li>
+        <li><a class="modal-trigger white-text" href="#modal3" onclick="ocultar_bloques()">Ocultar bloques</a></li>
         <li><a class="modal-trigger white-text" href="ordenarCat.html" >Ordenar bloques</a></li>
         <li class="no-padding">
           <ul class="collapsible collapsible-accordion">
@@ -254,7 +254,7 @@
       <h3>Ocular bloques</h3>
       <div class="row">
         <div class="input-field col s12">
-            <select id="categoriaOcultar" onchange="showOcultar()">
+            <select id="categoriaOcultar" onchange="showBloque()">
               <option value="" disabled selected>Escoge una categoria</option>
             </select>
             <label>Categoria</label>
@@ -263,11 +263,19 @@
       </div>
       <div class="row">
         <div class="input-field col s12">
+          <select id="bloque">
+            <option value="" disabled selected>Escoge un bloque</option>
+          </select>
+          <label>Bloque</label>
+        </div>  
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
           <select id="ocultar">
             <option value="1">Ocultar</option>
             <option value="2">Mostrar</option>
           </select>
-          <label>Categoria</label>
+          <label>Mostrar</label>
         </div>  
       </div>
       <a class="waves-effect waves-light btn guardar" onclick="guardarBloqueOculto()">Guardar</a>
