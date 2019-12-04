@@ -265,7 +265,10 @@ function showBloque(){
             {
                 node = document.createElement("OPTION");
                 node.innerHTML = objeto[key]['nombre'];
-                node.setAttribute("value",elemento+'/'+key);
+                if(elemento == 'all')
+                    node.setAttribute("value",key);
+                else
+                    node.setAttribute("value",elemento+'/'+key);
                 bloque.add(node);
             }
          
@@ -287,6 +290,7 @@ function showBloque(){
 function guardarBloqueOculto(){
     var selectCat = document.getElementById('bloque').value;
     var selectOcultar = document.getElementById('ocultar').value;
+    console.log(selectCat);
     var estado;
     if(selectOcultar == 1){
         estado = false;
