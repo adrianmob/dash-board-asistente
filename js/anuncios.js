@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function foto(logo){
+function fotos(logo){
     var foto = document.getElementById("anuncio");
     console.log(foto.files);
     if(foto.files.length > 0){
