@@ -30,6 +30,11 @@ document.addEventListener('DOMContentLoaded', async function() {
           document.getElementById('InputImgSubCat2').value = "";
           document.getElementById('imgSubCat2').setAttribute("src","assets/imgs/no-image.png");
           document.getElementById('selectServicio2').value = "";
+        //Editar bloques
+            document.getElementById('categoriaEdit').value = "";
+            document.getElementById('subCatEdit').value = "";
+            document.getElementById('subcat2Edit').value = "";
+            document.getElementById('EditSubCat2').classList.add("invisible");
         
         //Ocultar informacion
           document.getElementById('catAdd').classList.add("invisible");

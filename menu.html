@@ -3,6 +3,7 @@
         <li><a class="modal-trigger white-text" href="#modal1" onclick="cargaData(1)">Carga de bloque</a></li>
         <li><a class="modal-trigger white-text" href="#modal2">Numero de telefonos</a></li>
         <li><a class="modal-trigger white-text" href="#modal3" onclick="ocultar_bloques()">Ocultar bloques</a></li>
+        <li><a class="modal-trigger white-text" href="#modal4" onclick="cargaData(2)">Editar bloques</a></li>
         <li><a class="modal-trigger white-text" href="ordenarCat.html" >Ordenar bloques</a></li>
         <li class="no-padding">
           <ul class="collapsible collapsible-accordion">
@@ -61,7 +62,7 @@
           <!-- CATEGORIA SELECT-->
           <div class="row">
               <div class="input-field col s12">
-                  <select id="categoria" onchange="showSubCat(1)">
+                  <select id="categoria" onchange="showSubCat(1,1)">
                     <option value="" disabled selected>Escoge una categoria</option>
                   </select>
                   <label>Categoria</label>
@@ -98,7 +99,7 @@
           <!-- SUBCATEGORIA1 SELECT-->
           <div class="row invisible" id="contSubCat">
               <div class="input-field col s12">
-                  <select id="subcat1" onchange="showSubCat(2)">
+                  <select id="subcat1" onchange="showSubCat(2,1)">
                     <option value="" disabled selected>Escoge una subcategoria</option>
                   </select>
                   <label>Subcategoria 1</label>
@@ -284,6 +285,61 @@
       <a href="#!" class="modal-close waves-effect waves-green btn-flat">cerrar</a>
     </div>
   </div>
+
+            <!-- Modal Structure 3 -->
+            <div id="modal4" class="modal modal-fixed-footer">
+              <div class="modal-content">
+                <h3>Editar bloques</h3>
+                <div class="row">
+                  <div class="input-field col s12">
+                      <select id="categoriaEdit" onchange="showSubCat(1,2)">
+                        <option value="" disabled selected>Escoge una categoria</option>
+                      </select>
+                      <label>Categoria</label>
+                  </div>
+                  
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <select id="subCatEdit" onchange="showSubCat(2,2)">
+                      <option value="" disabled selected>Escoge un subcategoria</option>
+                    </select>
+                    <label>Subcategoria</label>
+                  </div>  
+                </div>
+                <div class="row invisible" id="EditSubCat2">
+                  <div class="input-field col s12">
+                      <select id="subcat2Edit">
+                        <option value="" disabled selected>Escoge una subcategoria</option>
+                      </select>
+                      <label>Subcategoria 2</label>
+                  </div>                  
+              </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <select id="selectServicioEdit">
+                      <option value="" disabled selected>Escoge un servicio</option>
+                      <option value="3">Elección</option>
+                      <option value="1">GPS</option>
+                      <option value="2">Elección + GPS</option>
+                      <option value="4">Consulta</option>
+                    </select>
+                    <label>Servicio</label>
+                  </div>  
+                </div>
+                <div class="row">
+                  <div class="col s6">
+                    <a class="waves-effect waves-light btn guardar" onclick="updateCat()">Guardar</a>
+                  </div>
+                  <div class="col s6">
+                    <a class="waves-effect red waves-light btn guardar" onclick="eliminarCat()">Eliminar</a>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">cerrar</a>
+              </div>
+            </div>
 
 
 

@@ -23,7 +23,7 @@ async function cargaData(modal){
         var element = document.getElementById("categoria"); 
     }
     else{
-        var element = document.getElementById("categoriaOcultar"); 
+        var element = document.getElementById("categoriaEdit"); 
     }
 
     await firebase.database().ref("categorias/").once("value",(data)=>{
@@ -159,11 +159,27 @@ function addCat(id){
     element.classList.add("visible");
 }
 
-function showSubCat(id){
-    var valorCat = document.getElementById("categoria").value;
-    if(id == 1){
+function showSubCat(id,modal){
+    if(modal == 1)
+    {
+        var valorCat = document.getElementById("categoria").value;
         var elementSubCat = document.getElementById("subcat1");
-    
+        var valorSubCat = document.getElementById("subcat1").value;
+        var elementSubCat2 = document.getElementById("subcat2");
+        var contSubCat = document.getElementById("contSubCat2");
+
+    }
+    else
+    {
+        var valorCat = document.getElementById("categoriaEdit").value;
+        var elementSubCat = document.getElementById("subCatEdit");
+        var valorSubCat = document.getElementById("subCatEdit").value;
+        var elementSubCat2 = document.getElementById("subcat2Edit");
+        var contSubCat = document.getElementById("EditSubCat2");
+
+    }
+    if(id == 1){
+   
         while (elementSubCat.firstChild) {
             elementSubCat.removeChild(elementSubCat.firstChild);
         }
@@ -171,28 +187,29 @@ function showSubCat(id){
         var node;
     
         for (const key in objetoCat[valorCat]) {
-            if(key !== 'nombre' && key !== 'url'){
+            if(key !== 'nombre' && key !== 'url' && key !== 'show' && key !== 'posicion'){
                 node = document.createElement("OPTION");
                 node.innerHTML = objetoCat[valorCat][key]['nombre'];
                 node.setAttribute("value",key);
                 elementSubCat.add(node);
             }
         }
-    
-        var contSubCat = document.getElementById("contSubCat");
-    
-        contSubCat.classList.remove("invisible");
-    
-        contSubCat.classList.remove("visible");
+
+        if(modal == 1)
+        {
+            
+            var contSubCat = document.getElementById("contSubCat");                   
+            contSubCat.classList.remove("invisible");    
+            contSubCat.classList.remove("visible");
+
+        }
 
     }
 
     else{
-        var valorSubCat = document.getElementById("subcat1").value;
-        var elementSubCat = document.getElementById("subcat2");
     
-        while (elementSubCat.firstChild) {
-            elementSubCat.removeChild(elementSubCat.firstChild);
+        while (elementSubCat2.firstChild) {
+            elementSubCat2.removeChild(elementSubCat2.firstChild);
         }
     
         var node;
@@ -200,20 +217,19 @@ function showSubCat(id){
     
         for (const key in objetoCat[valorCat][valorSubCat]) {
             
-            if(key !== 'nombre' && key !== 'url'){
+            if(key !== 'nombre' && key !== 'show' && key !== 'posicion'){
                 if(key === "grupo"){
                     var objSubcat = objetoCat[valorCat][valorSubCat][key];
                     for (const key in objSubcat) {
                         node = document.createElement("OPTION");
                         node.innerHTML = objSubcat[key]['nombre'];
                         node.setAttribute("value",key);
-                        elementSubCat.add(node);
+                        elementSubCat2.add(node);
                     }
                 }
             }
         }
-    
-        var contSubCat = document.getElementById("contSubCat2");
+
     
         contSubCat.classList.remove("invisible");
     
@@ -334,6 +350,85 @@ function cerrar(id){
     elemento.classList.add("invisible");
 }
 
+function updateCat()
+{
+    var cat = document.getElementById('categoriaEdit').value;
+    var subCat = document.getElementById('subCatEdit').value;
+    var subCat2 = document.getElementById('subcat2Edit').value;
+    var servicio = document.getElementById('selectServicioEdit').value;
+
+    if( subCat !== '' && servicio !== ''){
+        let referencia = "categorias/"+cat+"/"+subCat;
+        if(subCat2 !== '')
+            referencia += "/grupo/"+subCat2;
+
+        firebase.database().ref(referencia).update({
+            tipo: servicio
+        });
+        Swal.fire({
+            type: 'success',
+            title: 'Muy bien',
+            text: 'Bloque cambiado',
+            onClose: () => {
+                var eleModal = document.querySelectorAll('.modal');
+                var instance = M.Modal.getInstance(eleModal[3]);
+                instance.close();
+              }
+        }); 
+
+    }
+    else
+    {
+        Swal.fire(
+            'Por favor',
+            'Llene todos los campos',
+            'warning'
+        );  
+    }
+
+
+
+}
+
+function eliminarCat()
+{
+    Swal.fire({
+        title: '¿Estas seguro?',
+        text: "Se eliminara todo el bloque!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Eliminalo!'
+      }).then((result) => {
+          if (result.value) {
+            var cat = document.getElementById('categoriaEdit').value;
+            var subCat = document.getElementById('subCatEdit').value;
+            var subCat2 = document.getElementById('subcat2Edit').value;
+
+            let referencia = "categorias/"+cat;
+            if(subCat !== '')
+            referencia += "/"+subCat;
+
+            if(subCat2 !== '')
+                referencia += "/grupo/"+subCat2;
+          
+            firebase.database().ref(referencia).remove();
+
+            Swal.fire({
+                type: 'success',
+                title: 'Eliminado',
+                text: 'El bloque ha sido eliminado.',
+                onClose: () => {
+                    var eleModal = document.querySelectorAll('.modal');
+                    var instance = M.Modal.getInstance(eleModal[3]);
+                    instance.close();
+                  }
+            });
+        }
+      })
+}
+
 function guardarCat(id){
     switch (id) {
         case 1:
@@ -342,7 +437,9 @@ function guardarCat(id){
             if(url == "assets/imgs/no-image.png") url = "";
             var categoria = {
                 nombre: document.getElementById('nombre').value,
-                imagen: url
+                imagen: url,
+                show: true,
+                posicion: 0
             };
 
             if(validarCampos(categoria)){
@@ -350,7 +447,9 @@ function guardarCat(id){
                 cat = {
                     nombre: categoria.nombre,
                     nombreCorto: nameShort(categoria.nombre),
-                    imagen: url
+                    imagen: url,
+                    show: true,
+                    posicion: 0
                 };
                 M.toast({
                     html: 'Se agrego la categoria, para poder guardar es necesario agregar una subcategoria',
@@ -371,6 +470,8 @@ function guardarCat(id){
         
             var subcategoria = {
                 nombre: document.getElementById('subcategoria').value,
+                show: true,
+                posicion: 0
             };
 
             var swich = document.getElementById('switCheck').checked;
@@ -386,12 +487,16 @@ function guardarCat(id){
                     if(cat){
                         var subCatObj = {
                             nombre: cat.nombre,
-                            url: cat.imagen
+                            url: cat.imagen,
+                            show: true,
+                            posicion: 0
                         };
                         subCatObj[nameShort(subcategoria.nombre)] = {
                             nombre: subcategoria.nombre,
                             tipo: subcategoria.tipo,
-                            url: subcategoria.url
+                            url: subcategoria.url,
+                            show: true,
+                            posicion: 0
                         };
 
                         firebase.database().ref("categorias/"+cat.nombreCorto).set(subCatObj); 
@@ -446,7 +551,9 @@ function guardarCat(id){
                     subCat = {
                         nombre: subcategoria.nombre,
                         nombreCorto: nameShort(subcategoria.nombre),
-                        imagen: subcategoria.url
+                        imagen: subcategoria.url,
+                        show: true,
+                        posicion: 0
                     };
                     console.log(subCat);
                     addCat('subCatAdd2');
@@ -468,7 +575,9 @@ function guardarCat(id){
             subCat2 = {
                 nombre: document.getElementById('subcategoria2').value,
                 tipo: document.getElementById('selectServicio2').value,
-                imagen: url
+                imagen: url,
+                show: true,
+                posicion: 0
             };
         
             if(validarCampos(subCat2)){
@@ -476,12 +585,16 @@ function guardarCat(id){
 
                     var categoriaFinal = {
                         nombre: cat.nombre,
-                        url: cat.imagen
+                        url: cat.imagen,
+                        show: true,
+                        posicion: 0
                     };
      
                     categoriaFinal[subCat.nombreCorto] = {
                         nombre: subCat.nombre,
-                        url: subCat.imagen
+                        url: subCat.imagen,
+                        show: true,
+                        posicion: 0
                     };
      
                     categoriaFinal[subCat.nombreCorto]['grupo'] = new Object();
@@ -489,7 +602,9 @@ function guardarCat(id){
                     categoriaFinal[subCat.nombreCorto]['grupo'][nameShort(subCat2.nombre)] = {
                      nombre: subCat2.nombre,
                      tipo: subCat2.tipo,
-                     url: subCat2.imagen
+                     url: subCat2.imagen,
+                     show: true,
+                     posicion: 0
                     }
                     
                 
@@ -512,7 +627,9 @@ function guardarCat(id){
                     subCat2[nameShort(document.getElementById('subcategoria2').value)] ={
                         nombre : document.getElementById('subcategoria2').value,
                         tipo: document.getElementById('selectServicio2').value,
-                        url: url
+                        url: url,
+                        show: true,
+                        posicion: 0
                     };
 
                     var nomCategoria = document.getElementById("categoria").value;
@@ -521,7 +638,9 @@ function guardarCat(id){
                         var categoriaFinal = {};
                         categoriaFinal[subCat['nombreCorto']] = {
                             nombre: subCat['nombre'],
-                            url: subCat['imagen']
+                            url: subCat['imagen'],
+                            show: true,
+                            posicion: 0
 
                         }
                         categoriaFinal[subCat['nombreCorto']]['grupo'] = {};
