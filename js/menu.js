@@ -426,7 +426,7 @@ function eliminarCat()
                   }
             });
         }
-      })
+      });
 }
 
 function guardarCat(id){
@@ -709,7 +709,7 @@ function validarCampos(objeto){
 
 }
 
-function foto(logo,id){
+function foto(id){
     switch (id) {
         case 1:
         
@@ -724,6 +724,7 @@ function foto(logo,id){
             var img = document.getElementById("imgSubCat");
         
             break;
+
 
         case 3:
 
