@@ -735,7 +735,6 @@ function foto(id){
         
     }
 
-    console.log(foto.files);
     if(foto.files.length > 0){
         var reader = new FileReader();
         reader.onload = function (e){

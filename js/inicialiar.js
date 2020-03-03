@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     var eleModal = document.querySelectorAll('.modal');
     var instanceModal = M.Modal.init(eleModal,{
         onCloseStart: (element)=>{
+        //Ciudades input
+          document.getElementById('nombreCiudad').value = "";
         //reseteo de los inputs Categoria Add
           document.getElementById('categoria').value = "";
           document.getElementById('nombre').value = "";
@@ -124,6 +126,20 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.log(categorias);
     });
 
+    firebase.database().ref("ciudades/").once("value",(data)=>{
+        let ciudades = data.val();
+        let node;
+        let element = document.getElementById('select3');
+        for (const key in ciudades) {
+            node = document.createElement("OPTION");
+            node.innerHTML = ciudades[key]['nombre'];
+            node.setAttribute("value",key);
+            element.add(node);
+        }
+        var select = document.querySelectorAll('select');
+        var selectInst = M.FormSelect.init(select);
+    });
+
     var select2 = document.getElementById("select2");
 
     addCatSelect();
@@ -223,7 +239,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           fechaFin: document.getElementById("fechaFin").value,
           subCategoria: document.getElementById("select2").value,
           fechaRegistro: fecha,
-          requisicionesAceptadas : 0
+          requisicionesAceptadas : 0,
+          ciudad: document.getElementById("select3").value
 
       };
 
@@ -255,7 +272,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       else{
         firebase.auth().createUserWithEmailAndPassword(body.correo, body.password).then((user)=>{
-            firebase.database().ref("proveedores/"+user.user.uid).set(body);    
+            firebase.database().ref("proveedores/"+body.ciudad+'/'+user.user.uid).set(body);    
             Swal.fire(
                 'Muy bien',
                 'Proveedor agregado',

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Asistente</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Estilos principales-->
+    <link rel="stylesheet" href="css/estilos.css">
+    <!--iconos-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+    <header id="header"></header>
+    <main>
+        <div class="principal">
+            <h3>Ciudades</h3>                    
+            <table class="striped centered responsive-table">
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="ciudadesBody">
+   
+                </tbody>
+             </table>
+             <div class="row">
+                 <div class="col s12">
+                    <a href="#modalCiudad" class="waves-effect waves-light btn-large btn-floating right modal-trigger" ><i class="material-icons">add</i></a>
+                 </div>
+             </div>
+        </div>
+    </main>
+
+    <div id="modalCiudad" class="modal">
+        <div class="modal-content">
+          <h4>Agregar Ciudad</h4>
+          <div class="row">
+            <div class="col s12">
+                <div class="input-field">
+                  <input id="nombreCiudad" data-key='' type="text" class="validate">
+                  <label for="nombreCiudad">Nombre de la ciudad</label>
+                </div> 
+            </div>                 
+        </div>
+        <a class="waves-effect waves-green btn" id="guardar" onclick="guardarCiudad()">Guardar</a>
+        <!-- <a class="waves-effect waves-green btn invisible" id="editar" onclick="editarCiudad()">Editar</a> -->
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">cerrar</a>
+        </div>
+      </div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAyowK8q1-Ibrrm-HcPOkb19b458OV4yuA",
+            authDomain: "asistente-db380.firebaseapp.com",
+            databaseURL: "https://asistente-db380.firebaseio.com",
+            projectId: "asistente-db380",
+            storageBucket: "asistente-db380.appspot.com",
+            messagingSenderId: "544411053198",
+            appId: "1:544411053198:web:a30415520547d8c4"
+        };
+        firebase.initializeApp(firebaseConfig);
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+     <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="js/inicialiar.js"></script>
+    <script src="js/menu.js"></script>
+    <script>
+            var header = document.getElementById("header");
+            var req = new XMLHttpRequest();
+            req.open("GET", "menu.html", false);
+            req.send(null);
+            header.innerHTML = req.responseText; 
+        </script>
+    <script>
+        document.addEventListener('DOMContentLoaded',function() {
+
+            var element = document.getElementById("ciudadesBody"); 
+
+            firebase.database().ref("ciudades/").on("value",(data)=>{
+                let ciudades = data.val();
+                let tr,td,editar,eliminar;
+
+                while (element.firstChild) {
+                    element.removeChild(element.firstChild);
+                }
+
+                for (const key in ciudades) {
+                    tr = document.createElement("TR");
+
+                    td = document.createElement("TD");
+                    td.innerHTML = ciudades[key]['nombre'];
+                    td.setAttribute("data-key",key);
+
+                    // editar = document.createElement("TD");
+                    // editar.innerHTML = `<a href="#modalCiudad" class="modal-trigger btn-floating waves-effect waves-light green" onclick="PreeditarCiudad('${key}')"><i class="material-icons">create</i></a>`;
+
+                    eliminar = document.createElement("TD");
+                    eliminar.innerHTML = `<a class="btn-floating waves-effect waves-light red" onclick="eliminarCiudad('${key}')"><i class="material-icons">delete</i></a>`;
+
+                    tr.appendChild(td);
+                    tr.appendChild(eliminar);
+                    element.appendChild(tr);
+                }
+            });
+        });  
+        
+        // function preGuadarCiudad()
+        // {
+        //     changeClass('visible','invisible');
+        // }
+        
+        function guardarCiudad(){
+
+            let nombre = document.getElementById('nombreCiudad').value;
+            let ciudad = {
+                nombre: nombre
+            };
+            firebase.database().ref("ciudades/"+nombre.toLowerCase()).set(ciudad);
+                Swal.fire({
+                icon: 'warning',
+                title: '¿Estas seguro de eliminarlo?',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'si, eliminalo!',
+                onClose: () => {
+                    var eleModal = document.querySelectorAll('.modal');
+                    var instance = M.Modal.getInstance(eleModal[4]);
+                    instance.close();
+                }
+            }).then((result)=>{
+                if( result.value ){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¿Estas seguro de eliminarlo?',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'si, eliminalo!',
+                        onClose: () => {
+                            var eleModal = document.querySelectorAll('.modal');
+                            var instance = M.Modal.getInstance(eleModal[4]);
+                            instance.close();
+                        }
+                    });
+                }
+            });   
+
+        }
+
+        // function PreeditarCiudad(id){
+        //     changeClass('invisible','visible');
+        //     let elemento = document.getElementById('nombreCiudad');
+        //     elemento.setAttribute('data-key',id);
+        // }
+
+        // function editarCiudad()
+        // {
+        //     let elemento = document.getElementById('nombreCiudad');
+        //     console.log(elemento.getAttribute('data-key'));
+        //     firebase.database().ref("ciudades/"+nombre.toLowerCase()).set(ciudad);
+
+
+        // }
+
+        function eliminarCiudad(id){
+            firebase.database().ref("ciudades/"+id).remove();
+            Swal.fire({
+                type: 'success',
+                title: 'Muy bien',
+                text: 'Ciudad eliminada',
+                onClose: () => {
+                    var eleModal = document.querySelectorAll('.modal');
+                    var instance = M.Modal.getInstance(eleModal[4]);
+                    instance.close();
+                }
+            });
+        }
+
+        // function changeClass(guardar,editar)
+        // {
+        //     debugger;
+        //     document.getElementById('editar').classList.remove(guardar);
+        //     document.getElementById('editar').classList.add(editar);
+
+        //     document.getElementById('guardar').classList.remove(editar);
+        //     document.getElementById('guardar').classList.add(guardar);
+        // }
+
+    </script>
+
+</body>
+</html>

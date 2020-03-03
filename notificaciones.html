@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Asistente</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Estilos principales-->
+    <link rel="stylesheet" href="css/estilos.css">
+    <!--iconos-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+    <header id="header"></header>
+    <main>
+        <div class="principal">
+            <h3>Notificaciones</h3>                    
+            <div class="row">
+                <div class="col s12">
+                    <div class="input-field">
+                      <input id="notificacionTitulo" type="text" class="validate">
+                      <label for="notificacionTitulo">Titulo</label>
+                    </div> 
+                </div>  
+                <div class="col s12">
+                    <div class="input-field">
+                      <input id="notificacionMensaje" type="text" class="validate">
+                      <label for="notificacionMensaje">Mensaje</label>
+                    </div> 
+                </div>  
+            </div>
+            <div class="row">
+                <p class="col s4">
+                    <label>
+                        <input name="segmento" type="radio" value="users" checked />
+                        <span>Usuarios</span>
+                    </label>
+                </p>
+                <p class="col s4">
+                    <label>
+                        <input name="segmento" value="proveedores" type="radio" />
+                        <span>Proveedores</span>
+                    </label>
+                </p>
+                <div class="col s4">
+                    <div class="input-field">
+                        <select id="select3"></select>
+                        <label>Ciudad</label>
+                    </div> 
+                </div> 
+
+            </div>  
+            <div class="row">
+                <div class="col s12">
+                    <a class="waves-effect waves-light btn" onclick="enviarNotificacion()"><i class="material-icons right">send</i>button</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAyowK8q1-Ibrrm-HcPOkb19b458OV4yuA",
+            authDomain: "asistente-db380.firebaseapp.com",
+            databaseURL: "https://asistente-db380.firebaseio.com",
+            projectId: "asistente-db380",
+            storageBucket: "asistente-db380.appspot.com",
+            messagingSenderId: "544411053198",
+            appId: "1:544411053198:web:a30415520547d8c4"
+        };
+        firebase.initializeApp(firebaseConfig);
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+     <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="js/inicialiar.js"></script>
+    <script src="js/menu.js"></script>
+    <script>
+            var header = document.getElementById("header");
+            var req = new XMLHttpRequest();
+            req.open("GET", "menu.html", false);
+            req.send(null);
+            header.innerHTML = req.responseText; 
+        </script>
+    <script>
+        
+        function enviarNotificacion()
+        {
+
+            let segmento = document.getElementsByName('segmento');
+            let segmentoValor;
+            let ciudadSelec = document.getElementById('select3').value;
+            segmento.forEach((data)=>{
+                if(data.checked)
+                    segmentoValor = data.value;
+                
+            });
+
+            firebase.database().ref(`${segmentoValor}/`).orderByChild('ciudad').equalTo(ciudadSelec).once("value",(data)=>{
+                let usuariosObj = data.val();
+                let usuarios = [];
+                for (const key in usuariosObj) {
+                    if (usuariosObj[key].hasOwnProperty('id_push')) 
+                        usuarios.push(usuariosObj[key]['id_push']);
+                }
+                let titulo = document.getElementById('notificacionTitulo').value;
+                let mensaje = document.getElementById('notificacionMensaje').value;
+
+                let url = 'https://onesignal.com/api/v1/notifications';
+
+                let body = {
+                    app_id: "e322ed51-88f6-4e1e-b8fc-9e00fc30acd2",
+                    include_player_ids: usuarios,
+                    data: {"foo": "bar"},
+                    android_channel_id: 'cb1f43e7-4c2d-45ed-9deb-5c7cd185c49d',
+                    contents: {"en": mensaje},
+                    headings: {"en": titulo}
+                };
+
+                fetch(url, {
+                    method: 'post',
+                    body: JSON.stringify(body),
+                    headers: { 'content-type': 'application/json; charset=utf-8' }
+                    });
+                });
+
+            
+        }
+
+
+    </script>
+
+</body>
+</html>
