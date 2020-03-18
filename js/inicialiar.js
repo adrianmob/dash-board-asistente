@@ -281,7 +281,7 @@ function registrar() {
         });
     } else {
         firebase.auth().createUserWithEmailAndPassword(body.correo, body.password).then((user) => {
-            firebase.database().ref("proveedores/" + body.ciudad + '/' + user.user.uid).set(body);
+            firebase.database().ref("proveedores/" + user.user.uid).set(body);
             Swal.fire(
                 'Muy bien',
                 'Proveedor agregado',
