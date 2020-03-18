@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Asistente</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Estilos principales-->
+    <link rel="stylesheet" href="css/estilos.css">
+    <!--iconos-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body>
+    <header id="header"></header>
+    <main>
+        <div class="principal">
+            <h3>Reportes</h3>
+            <div class="row">
+                <div class="col s2 center">
+                    <a class="waves-effect waves-light btn" onclick="proveedor()">Proveedor</a>
+                </div>
+                <div class="col s2 center">
+                    <a class="waves-effect waves-light btn" onclick="clientes()">Clientes</a>
+                </div>
+                <div class="col s2 center">
+                    <a class="waves-effect waves-light btn" onclick="anuncios()">Anuncios</a>
+                </div>
+                <div class="col s2 center">
+                    <a class="waves-effect waves-light btn" onclick="notificaciones()">Notificaciones</a>
+                </div>
+                <div class="col s3 center">
+                    <a class="waves-effect waves-light btn" onclick="comentarios()">Comentarios</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAyowK8q1-Ibrrm-HcPOkb19b458OV4yuA",
+            authDomain: "asistente-db380.firebaseapp.com",
+            databaseURL: "https://asistente-db380.firebaseio.com",
+            projectId: "asistente-db380",
+            storageBucket: "asistente-db380.appspot.com",
+            messagingSenderId: "544411053198",
+            appId: "1:544411053198:web:a30415520547d8c4"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="js/inicialiar.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/papaparse.js"></script>
+    <script>
+        var header = document.getElementById("header");
+        var req = new XMLHttpRequest();
+        req.open("GET", "menu.html", false);
+        req.send(null);
+        header.innerHTML = req.responseText;
+    </script>
+    <script>
+        function proveedor() {
+            firebase.database().ref("proveedores/").once("value", (data) => {
+                let proveedor = data.val();
+                let proveed = [];
+                for (const key in proveedor) {
+                    if (proveedor[key].hasOwnProperty('cp')) {
+                        let fechaRegistro = new Date(proveedor[key]['fechaRegistro']);
+                        proveedor[key]['fechaRegistro'] =
+                            `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
+
+                        proveed.push({
+                            'fecha registro': proveedor[key]['fechaRegistro'],
+                            'nombre': proveedor[key]['nombre'],
+                            'ciudad': proveedor[key]['ciudad'],
+                            'contacto': proveedor[key]['contacto'],
+                            'domicilio': proveedor[key]['domicilio'],
+                            'cp': proveedor[key]['cp'],
+                            'Fecha Inicio': proveedor[key]['fechaInicio'],
+                            'Fecha Fin': proveedor[key]['fechaFin'],
+                            'Subcategoria': proveedor[key]['subCategoria'],
+                            'facebook': proveedor[key]['urlFacebook']
+                        });
+                    }
+                }
+
+                var csv = Papa.unparse({
+                    "data": proveed
+                });
+
+                var blob = new Blob([
+                    ["\ufeff"], csv
+                ]);
+                var blobURL = window.URL.createObjectURL(blob);
+
+                let a = document.createElement('A');
+                a.href = blobURL;
+                a.download = 'proveedores.csv';
+                a.click();
+                a.remove();
+
+            });
+
+        }
+
+        function clientes() {
+            firebase.database().ref("users/").once("value", (data) => {
+                let cliente = data.val();
+                let proveed = [];
+                for (const key in cliente) {
+                    if (cliente[key].hasOwnProperty('correo')) {
+
+                        if (cliente[key].hasOwnProperty('fechaNac')) {
+                            let fechaRegistro = new Date(cliente[key]['fechaNac']);
+                            cliente[key]['fechaNac'] =
+                            `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
+            
+                        }
+
+                        else
+                            cliente[key]['fechaNac'] = '';
+
+                        
+                        proveed.push({
+                            'nombre': cliente[key]['nombre'],
+                            'ciudad': cliente[key]['ciudad'],
+                            'Apellido P': cliente[key]['apellidoPat'],
+                            'Apellido M': cliente[key]['apellidoMat'],
+                            'Fecha Nacimiento': cliente[key]['fechaNac'],
+                            'Telefono': cliente[key]['telefono'],
+                            'correo': cliente[key]['correo']
+                        });
+                    }
+                }
+
+                var csv = Papa.unparse({
+                    "data": proveed
+                });
+
+                var blob = new Blob([
+                    ["\ufeff"], csv
+                ]);
+                var blobURL = window.URL.createObjectURL(blob);
+
+                let a = document.createElement('A');
+                a.href = blobURL;
+                a.download = 'clientes.csv';
+                a.click();
+                a.remove();
+
+            });
+        }
+
+        function anuncios() {
+            firebase.database().ref("anuncios/").once("value", (data) => {
+                console.log(data.val());
+
+            });
+        }
+
+        function notificaciones() {
+            firebase.database().ref("proveedores/").once("value", (data) => {
+                console.log(data.val());
+
+            });
+        }
+
+        function comentarios() {
+            firebase.database().ref("anunciate/").once("value", (data) => {
+                console.log(data.val());
+
+                firebase.database().ref("comentarios/").once("value", (data) => {
+                    console.log(data.val());
+
+                });
+
+            });
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,11 +14,19 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </head>
+
 <body>
     <header id="header"></header>
     <main>
         <div class="principal">
-            <h3>Usuarios</h3>                    
+            <h3>Usuarios</h3>
+            <div class="row">
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">search</i>
+                    <input id="search" type="text" class="validate" onchange="search()">
+                    <label for="search">Buscar</label>
+                </div>
+            </div>
             <table class="striped centered responsive-table">
                 <thead>
                     <tr>
@@ -28,9 +37,9 @@
                 </thead>
 
                 <tbody id="usersBody">
-   
+
                 </tbody>
-             </table>
+            </table>
         </div>
     </main>
 
@@ -47,42 +56,102 @@
             appId: "1:544411053198:web:a30415520547d8c4"
         };
         firebase.initializeApp(firebaseConfig);
-        </script>
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
-     <!-- Compiled and minified JavaScript -->
+    <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="js/inicialiar.js"></script>
     <script src="js/menu.js"></script>
     <script>
-            var header = document.getElementById("header");
-            var req = new XMLHttpRequest();
-            req.open("GET", "menu.html", false);
-            req.send(null);
-            header.innerHTML = req.responseText; 
-        </script>
+        var header = document.getElementById("header");
+        var req = new XMLHttpRequest();
+        req.open("GET", "menu.html", false);
+        req.send(null);
+        header.innerHTML = req.responseText;
+    </script>
     <script>
-        document.addEventListener('DOMContentLoaded',function() {
+        usuarios = [];
+        document.addEventListener('DOMContentLoaded', function () {
             getAllUsers();
-        }); 
+        });
 
-        function getAllUsers(){
+        function getAllUsers() {
             let url = 'https://us-central1-asistente-db380.cloudfunctions.net/listUsers';
-            fetch(url,{
-                method: 'GET'
-                        
-            })
-            .then((response)=> response.json())
-            .then((datos)=>{
+            fetch(url, {
+                    method: 'GET'
 
-                let element = document.getElementById("usersBody"); 
-                while (element.firstChild) {
-                    element.removeChild(element.firstChild);
-                }
+                })
+                .then((response) => response.json())
+                .then((datos) => {
 
-                let tr,tdNombre, tdInha, Inhabilitar;
-                datos.map((user)=>{
-                   
+                    usuarios = datos;
+                    let element = document.getElementById("usersBody");
+
+                    while (element.firstChild) {
+                        element.removeChild(element.firstChild);
+                    }
+
+                    let tr, tdNombre, tdInha, Inhabilitar;
+                    usuarios.map((user) => {
+
+                        tr = document.createElement("TR");
+
+                        tdNombre = document.createElement("TD");
+                        tdNombre.innerHTML = user.email;
+
+                        tdInha = document.createElement("TD");
+                        tdInha.innerHTML = user.disabled;
+
+                        Inhabilitar = document.createElement("TD");
+                        Inhabilitar.innerHTML =
+                            `<a class="btn-floating waves-effect waves-light red" onclick="inhabilitarUser('${user.email}')"><i class="material-icons">delete</i></a>`;
+
+                        tr.appendChild(tdNombre);
+                        tr.appendChild(tdInha);
+                        tr.appendChild(Inhabilitar);
+                        element.appendChild(tr);
+
+                    });
+                });
+        }
+
+        function inhabilitarUser(email) {
+
+            let url = 'https://us-central1-asistente-db380.cloudfunctions.net/inhabilitar?email=' + email;
+            fetch(url, {
+                    method: 'GET'
+
+                })
+                .then((response) => response.json())
+                .then((datos) => {
+                    if (typeof datos === 'object') {
+                        Swal.fire({
+                            type: 'success',
+                            title: 'Muy bien',
+                            text: `usuario con correo ${datos.email} ha sido modificado`
+
+                        });
+                        getAllUsers();
+                    }
+                });
+        }
+
+        function search() {
+            let element = document.getElementById("usersBody");
+            while (element.firstChild) 
+                element.removeChild(element.firstChild);
+    
+            let text_sarch = document.querySelector('#search').value;
+            text_sarch = text_sarch.toLowerCase();
+            let tr, tdNombre, tdInha, Inhabilitar;
+
+            usuarios.map((user) => {
+                let correo = user.email.toLowerCase();
+
+                console.log(correo.indexOf(text_sarch))
+
+                if (correo.indexOf(text_sarch) !== -1) {
                     tr = document.createElement("TR");
 
                     tdNombre = document.createElement("TD");
@@ -92,41 +161,18 @@
                     tdInha.innerHTML = user.disabled;
 
                     Inhabilitar = document.createElement("TD");
-                    Inhabilitar.innerHTML = `<a class="btn-floating waves-effect waves-light red" onclick="inhabilitarUser('${user.email}')"><i class="material-icons">delete</i></a>`;
+                    Inhabilitar.innerHTML =
+                        `<a class="btn-floating waves-effect waves-light red" onclick="inhabilitarUser('${user.email}')"><i class="material-icons">delete</i></a>`;
 
                     tr.appendChild(tdNombre);
                     tr.appendChild(tdInha);
                     tr.appendChild(Inhabilitar);
                     element.appendChild(tr);
-
-                });
-            });
-        } 
-
-        function inhabilitarUser(email){
-            
-            let url = 'https://us-central1-asistente-db380.cloudfunctions.net/inhabilitar?email='+email;
-            fetch(url,{
-                method: 'GET'
-                        
-            })
-            .then((response)=> response.json())
-            .then((datos)=>{
-                if( typeof datos === 'object')
-                {
-                    Swal.fire({
-                        type: 'success',
-                        title: 'Muy bien',
-                        text: `usuario con correo ${datos.email} ha sido modificado`
-        
-                    });
-                    getAllUsers();
                 }
             });
         }
-
-
     </script>
 
 </body>
+
 </html>
