@@ -65,15 +65,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    update_anuncios();
+    let element = document.getElementById('ciudad');
+
+    firebase.database().ref("ciudades/").once("value", (data) => {
+        let ciudades = data.val();
+        let node;
+        for (const key in ciudades) {
+            node = document.createElement("OPTION");
+            node.innerHTML = ciudades[key]['nombre'];
+            node.setAttribute("value", key);
+            element.add(node);
+        }
+        var select = document.querySelectorAll('select');
+        var selectInst = M.FormSelect.init(select);
+
+        update_anuncios();
+
+    });
+
   
 });
 
 function update_anuncios()
 {
+    let ciudad = document.getElementById('ciudad').value;
 
-    
-    firebase.database().ref("anuncios/").on("value",(data)=>{
+    firebase.database().ref("anuncios/").orderByChild('ciudad').equalTo(ciudad).on("value",(data)=>{
         
         array_anuncios = [];
         
@@ -127,6 +144,7 @@ function registrar(){
     var fecha = Date.now();
     var tipoCheck = document.getElementById('switcPromo').checked;
     var tipo = (tipoCheck) ? "promocion" : "anuncio";
+    let ciudad = document.getElementById('ciudad').value;
 
     var body = {
         telefono:  document.getElementById("telefono").value,
@@ -134,6 +152,7 @@ function registrar(){
         fechaFin: document.getElementById("fechaFin").value,
         fechaRegistro: fecha,
         foto: imagen,
+        ciudad,
         tipo: tipo
     };
 

@@ -106,20 +106,23 @@
                 let usuariosObj = data.val();
                 let usuarios = [];
                 for (const key in usuariosObj) {
-                    debugger;
                     if (usuariosObj[key].hasOwnProperty('id_push')) 
                         usuarios.push(usuariosObj[key]['id_push']);
                 }
                 let titulo = document.getElementById('notificacionTitulo').value;
                 let mensaje = document.getElementById('notificacionMensaje').value;
 
+                let app_id = (segmentoValor == 'proveedores') ? '766faa48-94b0-450b-a160-34eb1a8f2adf' : 'e322ed51-88f6-4e1e-b8fc-9e00fc30acd2';
+                
+                let channel_android = (segmentoValor == 'proveedores') ? '99983701-c5f0-4b04-8181-0d76cecb368a' : 'cb1f43e7-4c2d-45ed-9deb-5c7cd185c49d';
+
                 let url = 'https://onesignal.com/api/v1/notifications';
 
                 let body = {
-                    app_id: "e322ed51-88f6-4e1e-b8fc-9e00fc30acd2",
+                    app_id: app_id,
                     include_player_ids: usuarios,
                     data: {"foo": "bar"},
-                    android_channel_id: 'cb1f43e7-4c2d-45ed-9deb-5c7cd185c49d',
+                    android_channel_id: channel_android,
                     contents: {"en": mensaje},
                     headings: {"en": titulo}
                 };
@@ -130,8 +133,19 @@
                     headers: { 
                         'Content-Type': 'application/json; charset=utf-8',
                         'Authorization': 'Y2Q5YzY2YjAtYWIzNi00MTQ4LWFmZTAtOWY3OWNlOWY5YmRm' }
+                    }).then((info)=>{
+                        if (info.status == 200){
+                            let hora = Date.now();
+                            console.log(hora);
+                            firebase.database().ref('notificaciones/').push({...body,
+                                fecha: hora,
+                                ciudad: ciudadSelec,
+                                destino: segmentoValor
+                            });
+                        }
                     });
-                });
+                })
+                
 
             
         }

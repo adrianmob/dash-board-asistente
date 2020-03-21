@@ -123,14 +123,12 @@
                         if (cliente[key].hasOwnProperty('fechaNac')) {
                             let fechaRegistro = new Date(cliente[key]['fechaNac']);
                             cliente[key]['fechaNac'] =
-                            `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
-            
-                        }
+                                `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
 
-                        else
+                        } else
                             cliente[key]['fechaNac'] = '';
 
-                        
+
                         proveed.push({
                             'nombre': cliente[key]['nombre'],
                             'ciudad': cliente[key]['ciudad'],
@@ -163,28 +161,192 @@
 
         function anuncios() {
             firebase.database().ref("anuncios/").once("value", (data) => {
-                console.log(data.val());
+                let anuncios = data.val();
+                let proveed = [];
+                for (const key in anuncios) {
+
+                    if (anuncios[key].hasOwnProperty('fechaRegistro')) {
+                        let fechaRegistro = new Date(anuncios[key]['fechaRegistro']);
+                        anuncios[key]['fechaRegistro'] =
+                            `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
+
+                    }
+
+                    proveed.push({
+                        'Ciudad': anuncios[key]['ciudad'],
+                        'Tipo': anuncios[key]['tipo'],
+                        'Fecha': anuncios[key]['fechaRegistro'],
+                        'Fecha Incio': anuncios[key]['fechaInicio'],
+                        'Fecha Final': anuncios[key]['fechaFin']
+                    });
+
+                }
+
+                var csv = Papa.unparse({
+                    "data": proveed
+                });
+
+                var blob = new Blob([
+                    ["\ufeff"], csv
+                ]);
+                var blobURL = window.URL.createObjectURL(blob);
+
+                let a = document.createElement('A');
+                a.href = blobURL;
+                a.download = 'anuncios.csv';
+                a.click();
+                a.remove();
+
 
             });
         }
 
         function notificaciones() {
-            firebase.database().ref("proveedores/").once("value", (data) => {
-                console.log(data.val());
+            firebase.database().ref("notificaciones/").once("value", (data) => {
+                let noti = data.val();
+                let proveed = [];
+                for (const key in noti) {
+
+                    if (noti[key].hasOwnProperty('fecha')) {
+                        let fechaRegistro = new Date(noti[key]['fecha']);
+                        noti[key]['fecha'] =
+                            `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
+
+                    }
+
+                    proveed.push({
+                        'ciudad': noti[key]['ciudad'],
+                        'destino': noti[key]['destino'],
+                        'fecha': noti[key]['fecha'],
+                    });
+
+                }
+
+                var csv = Papa.unparse({
+                    "data": proveed
+                });
+
+                var blob = new Blob([
+                    ["\ufeff"], csv
+                ]);
+                var blobURL = window.URL.createObjectURL(blob);
+
+                let a = document.createElement('A');
+                a.href = blobURL;
+                a.download = 'notificaciones.csv';
+                a.click();
+                a.remove();
 
             });
         }
 
-        function comentarios() {
-            firebase.database().ref("anunciate/").once("value", (data) => {
-                console.log(data.val());
+        async function comentarios() {
+            let proveed = [];
+            let anunciosRev = await firebase.database().ref("historialAnunciate/").once("value");
+            anunciosRev = anunciosRev.val();
 
-                firebase.database().ref("comentarios/").once("value", (data) => {
-                    console.log(data.val());
+            for (const key in anunciosRev) {
 
+                if (anunciosRev[key].hasOwnProperty('fecha')) {
+                    let fechaRegistro = new Date(anunciosRev[key]['fecha']);
+                    anunciosRev[key]['fecha'] =
+                        `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
+
+                }
+
+                proveed.push({
+                    'Nombre': anunciosRev[key]['nombre'],
+                    'Correo': anunciosRev[key]['correo'],
+                    'Fecha': anunciosRev[key]['fecha'],
+                    'Telefono': anunciosRev[key]['telefono'],
+                    'Estatus': 'revisado',
                 });
 
-            });
+            }
+
+            let comentarioRev = await firebase.database().ref("historialComentarios/").once("value");
+            comentarioRev = comentarioRev.val();
+
+            for (const key in comentarioRev) {
+
+                if (comentarioRev[key].hasOwnProperty('fecha')) {
+                    let fechaRegistro = new Date(comentarioRev[key]['fecha']);
+                    comentarioRev[key]['fecha'] =
+                        `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
+
+                }
+
+                proveed.push({
+                    'Nombre': comentarioRev[key]['nombre'],
+                    'Correo': comentarioRev[key]['correo'],
+                    'Fecha': comentarioRev[key]['fecha'],
+                    'Telefono': comentarioRev[key]['telefono'],
+                    'Descripcion': comentarioRev[key]['comentario'],
+                    'Estatus': 'revisado',
+                });
+
+            }
+
+            let anunciosPor = await firebase.database().ref("anunciate/").once("value");
+            anunciosPor = anunciosPor.val();
+
+            for (const key in anunciosPor) {
+
+                if (anunciosPor[key].hasOwnProperty('fecha')) {
+                    let fechaRegistro = new Date(anunciosPor[key]['fecha']);
+                    anunciosPor[key]['fecha'] =
+                        `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
+
+                }
+
+                proveed.push({
+                    'Nombre': anunciosPor[key]['nombre'],
+                    'Correo': anunciosPor[key]['correo'],
+                    'Fecha': anunciosPor[key]['fecha'],
+                    'Telefono': anunciosPor[key]['telefono'],
+                    'Estatus': 'por revisar',
+                });
+
+            }
+
+            let comentarioPor = await firebase.database().ref("comentarios/").once("value");
+            comentarioPor = comentarioPor.val();
+
+            for (const key in comentarioPor) {
+
+                if (comentarioPor[key].hasOwnProperty('fecha')) {
+                    let fechaRegistro = new Date(comentarioPor[key]['fecha']);
+                    comentarioPor[key]['fecha'] =
+                        `${fechaRegistro.getDate() < 10 ? '0'+fechaRegistro.getDate() : fechaRegistro.getDate() }/${ (fechaRegistro.getMonth() + 1 < 10) ? '0'+(fechaRegistro.getMonth() + 1) : (fechaRegistro.getMonth() + 1) }/${fechaRegistro.getFullYear()}`;
+
+                }
+
+                proveed.push({
+                    'Nombre': comentarioPor[key]['nombre'],
+                    'Correo': comentarioPor[key]['correo'],
+                    'Fecha': comentarioPor[key]['fecha'],
+                    'Telefono': comentarioPor[key]['telefono'],
+                    'Descripcion': comentarioPor[key]['comentario'],
+                    'Estatus': 'por revisar',
+                });
+
+            }
+
+            var csv = Papa.unparse({
+                    "data": proveed
+                });
+
+                var blob = new Blob([
+                    ["\ufeff"], csv
+                ]);
+                var blobURL = window.URL.createObjectURL(blob);
+
+                let a = document.createElement('A');
+                a.href = blobURL;
+                a.download = 'comentarios_anunciate.csv';
+                a.click();
+                a.remove();
+
         }
     </script>
 
