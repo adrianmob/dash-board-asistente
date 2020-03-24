@@ -83,6 +83,8 @@
                             'fecha registro': proveedor[key]['fechaRegistro'],
                             'nombre': proveedor[key]['nombre'],
                             'ciudad': proveedor[key]['ciudad'],
+                            'correo': proveedor[key]['correo'],
+                            'password': proveedor[key]['password'],
                             'contacto': proveedor[key]['contacto'],
                             'domicilio': proveedor[key]['domicilio'],
                             'cp': proveedor[key]['cp'],
@@ -173,6 +175,7 @@
                     }
 
                     proveed.push({
+                        'telefono': anuncios[key]['telefono'],
                         'Ciudad': anuncios[key]['ciudad'],
                         'Tipo': anuncios[key]['tipo'],
                         'Fecha': anuncios[key]['fechaRegistro'],
@@ -259,6 +262,7 @@
                     'Correo': anunciosRev[key]['correo'],
                     'Fecha': anunciosRev[key]['fecha'],
                     'Telefono': anunciosRev[key]['telefono'],
+                    'Descripcion': '',
                     'Estatus': 'revisado',
                 });
 
@@ -304,6 +308,7 @@
                     'Correo': anunciosPor[key]['correo'],
                     'Fecha': anunciosPor[key]['fecha'],
                     'Telefono': anunciosPor[key]['telefono'],
+                    'Descripcion': '',
                     'Estatus': 'por revisar',
                 });
 
