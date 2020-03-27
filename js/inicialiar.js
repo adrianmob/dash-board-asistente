@@ -53,12 +53,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     let element = document.getElementById('select3');
 
     if (element) {
-        await firebase.database().ref("categorias/").once("value", (data) => {
+         await firebase.database().ref("categorias/").once("value", (data) => {
             var index = 0;
             for (const categoria in data.val()) {
                 index++;
                 for (const subcategoria in data.val()[categoria]) {
-                    if (subcategoria !== 'nombre' && subcategoria !== 'url' && subcategoria !== 'show') {
+                    if (subcategoria !== 'nombre' && subcategoria !== 'url' && subcategoria !== 'show' && subcategoria !=='posicion') {
                         if (data.val()[categoria][subcategoria].hasOwnProperty("grupo")) {
                             var grupos = [];
                             for (const subcategoria2 in data.val()[categoria][subcategoria]["grupo"]) {
@@ -131,6 +131,25 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                 }
             }
+            index++
+            console.log(categorias);
+            categorias[index] = new Array({
+                nombre: 'Repartidor',
+                valor: 'repartidor'
+            });
+            categorias[index]['nombre'] = 'Repartidor';
+            categorias[index]['categoria'] = 'repartidor';
+
+            index++;
+
+            categorias[index] = new Array({
+                nombre: 'Tercero',
+                valor: 'tercero'
+            });
+
+            categorias[index]['nombre'] = 'Tercero';
+            categorias[index]['categoria'] = 'tercero';
+
         });
 
         firebase.database().ref("ciudades/").once("value", (data) => {
@@ -246,6 +265,7 @@ function registrar() {
         cp: document.getElementById("cp").value,
         fechaInicio: document.getElementById("fechaIni").value,
         fechaFin: document.getElementById("fechaFin").value,
+        categoria: document.getElementById("select").value,
         subCategoria: document.getElementById("select2").value,
         fechaRegistro: fecha,
         requisicionesAceptadas: 0,
@@ -307,13 +327,17 @@ function convFecha(fecha) {
 
 function select() {
     var selVal = document.getElementById("select").value;
+    let catArray = Object.values(categorias);
+    let index = catArray.findIndex(data => data['categoria'] === selVal);
+    index++;
+
     var select2 = document.getElementById("select2");
 
     while (select2.firstChild) {
         select2.removeChild(select2.firstChild);
     }
 
-    addSelect(selVal, select2);
+    addSelect(index, select2);
 
     var select = document.querySelectorAll('select');
     var selectInst = M.FormSelect.init(select);
@@ -338,8 +362,8 @@ function addCatSelect() {
     var element = document.getElementById("select");
     for (const key in categorias) {
         node = document.createElement("OPTION");
-        node.innerHTML = categorias[key]['categoria'];
-        node.setAttribute("value", key);
+        node.innerHTML = categorias[key]['nombre'];
+        node.setAttribute("value", categorias[key]['categoria']);
         element.add(node);
 
     }
