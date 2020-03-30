@@ -270,8 +270,8 @@ function registrar() {
         subCategoria: document.getElementById("select2").value,
         fechaRegistro: fecha,
         requisicionesAceptadas: 0,
-        ciudad: document.getElementById("select3").value
-
+        ciudad: document.getElementById("select3").value,
+        rfc: document.getElementById("rfc").value
     };
 
     body.fechaFin = convFecha(body.fechaFin);
