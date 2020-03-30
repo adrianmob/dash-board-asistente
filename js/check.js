@@ -3,7 +3,6 @@ function check(){
 
     let user = JSON.parse(localStorage.getItem('user_asistente'));
     var direccion = window.location.pathname;
-    debugger;
 
     if (user) {
 

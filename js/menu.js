@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let user = JSON.parse(localStorage.getItem('user_asistente'));
 
     if( user['tipo'] == 'general'){
-        console.log(menu);
+        let menu = document.querySelectorAll('#slide-out > li');
         menu[1].remove();
         menu[2].remove();
         menu[3].remove();
