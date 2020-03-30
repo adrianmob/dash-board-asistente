@@ -8,6 +8,24 @@ document.addEventListener('DOMContentLoaded', function() {
     var elemTabs = document.querySelectorAll('.tabs');
     var instance = M.Tabs.init(elemTabs);
 
+    let user = JSON.parse(localStorage.getItem('user_asistente'));
+
+    if( user['tipo'] == 'general'){
+        console.log(menu);
+        menu[1].remove();
+        menu[2].remove();
+        menu[3].remove();
+        menu[4].remove();
+        menu[6].remove();
+        menu[7].remove();
+        menu[8].remove();
+        menu[9].remove();
+        menu[10].remove();
+        menu[12].remove();
+
+    }
+
+
 });
 
 var objetoCat;

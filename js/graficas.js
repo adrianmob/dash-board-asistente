@@ -1,5 +1,7 @@
 var tipoGrafica = getParameterByName('grafica');
 var proveedoresCali = [];
+check();
+
 document.addEventListener('DOMContentLoaded',  async function() {
     var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
     await firebase.database().ref("proveedores/").on("value",(data)=>{

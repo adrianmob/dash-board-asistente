@@ -1,4 +1,5 @@
 var comentarios = [];
+check();
 document.addEventListener('DOMContentLoaded', function() {
      firebase.database().ref("comentarios/").on("value",(data)=>{
         var fila = document.getElementById("fila");

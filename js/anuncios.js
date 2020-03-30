@@ -1,4 +1,5 @@
 let array_anuncios = [];
+check();
 
 document.addEventListener('DOMContentLoaded', function() {
     var datapicker = document.querySelectorAll('.datepicker');

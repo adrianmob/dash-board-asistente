@@ -1,5 +1,6 @@
 var categorias = {};
 var tipo;
+check();
 document.addEventListener('DOMContentLoaded', async function () {
     var elems = document.querySelectorAll('.sidenav');
     var instances = M.Sidenav.init(elems);
@@ -299,9 +300,13 @@ function registrar() {
                 });
             });
         });
-    } else {
+    } else {       
+
         firebase.auth().createUserWithEmailAndPassword(body.correo, body.password).then((user) => {
-            firebase.database().ref("proveedores/" + user.user.uid).set(body);
+            let ruta = `proveedores/${ user.user.uid}`;
+
+            firebase.database().ref(ruta).set(body);
+            firebase.database().ref(`${body.subCategoria}/${body.ciudad}`).set(body);
             Swal.fire(
                 'Muy bien',
                 'Proveedor agregado',

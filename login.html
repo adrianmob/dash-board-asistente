@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Asistente General</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="contenedor">
+        <h3 class="encabezado">Bienvenido</h3>
+        <div class="formulario">
+            <div class="input">
+                <input class="inputElement" type="email" name="email" id="email">
+                <span class="spanInput">Email</span>
+            </div>
+            <div class="input">
+                <input class="inputElement" type="password" name="password" id="pass">
+                <span class="spanInput">Password</span>
+            </div>
+        </div>
+        <div class="contBoton">
+            <button class="boton" onclick="entrar(event)">Entrar</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAyowK8q1-Ibrrm-HcPOkb19b458OV4yuA",
+            authDomain: "asistente-db380.firebaseapp.com",
+            databaseURL: "https://asistente-db380.firebaseio.com",
+            projectId: "asistente-db380",
+            storageBucket: "asistente-db380.appspot.com",
+            messagingSenderId: "544411053198",
+            appId: "1:544411053198:web:a30415520547d8c4"
+        };
+        firebase.initializeApp(firebaseConfig);
+        </script>
+
+    <script src="js/check.js"></script>
+    <script src="js/login.js"></script>
+
+
+</body>
+
+</html>

@@ -1,4 +1,5 @@
 var anuncios = [];
+check();
 document.addEventListener('DOMContentLoaded', async function() {
     await firebase.database().ref("historialAnunciate/").on("value",(data)=>{
         var fila = document.getElementById("fila");

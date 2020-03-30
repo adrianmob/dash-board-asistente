@@ -1,3 +1,4 @@
+check();
 document.addEventListener('DOMContentLoaded', async function() {
 
         var element = document.getElementById("categoriaOrdenar"); 
