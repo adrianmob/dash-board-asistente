@@ -7,7 +7,7 @@ function check(){
 
     if (user) {
 
-        if( direccion == "/dash-asistente/login.html" )
+        if( direccion == "/dash-board-asistente/login.html" )
 
 
         Swal.fire({
@@ -18,7 +18,7 @@ function check(){
                 showConfirmButton: false,
                 onClose: () => {
 
-                    window.location = "/dash-asistente/";
+                    window.location = "/dash-board-asistente/";
                 }
         });
 
@@ -27,9 +27,9 @@ function check(){
 
     } else {
 
-        if ( direccion != "/dash-asistente/login.html" ) {
+        if ( direccion != "/dash-board-asistente/login.html" ) {
 
-            window.location = "/dash-asistente/login.html";
+            window.location = "/dash-board-asistente/login.html";
 
 
 
