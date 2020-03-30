@@ -83,6 +83,7 @@
                         proveed.push({
                             'fecha registro': proveedor[key]['fechaRegistro'],
                             'nombre': proveedor[key]['nombre'],
+                            'rfc': proveedor[key].hasOwnProperty('rfc') ? proveedor[key]['rfc'] : '',
                             'ciudad': proveedor[key]['ciudad'],
                             'correo': proveedor[key]['correo'],
                             'password': proveedor[key]['password'],
